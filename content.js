@@ -57,3 +57,12 @@ function adjustFrequency(frequency, dB){
 		audioElement.play();
     });
 }
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+
+    if(request.command == "volume"){
+        console.log("content received volume command VOLUME: ", request.level);
+        adjustVolume(request.level * .01);
+    }
+
+});
