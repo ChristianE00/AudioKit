@@ -1,42 +1,4 @@
-
-async function combineIcons(icon1Url, icon2Url) {
-
-    const icon1 = new Image();
-    const icon2 = new Image();
-
-
-    icon1.src = icon1Url;
-    icon2.src = icon2Url;
-
-    await Promise.all([
-        new Promise(resolve => icon1.onload = resolve),
-        new Promise(resolve => icon2.onload = resolve)
-    ]);
-
-
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-
-
-    ctx.drawImage(icon1, 0, 0);
-    ctx.drawImage(icon2, icon1.width, 0);
-
-
-    const combinedIconUrl = canvas.toDataURL('image/x-icon');
-
-    return combinedIconUrl;
-}
-
-var activeIcon = false;
-
-function adjustVolume(percent) {
-    activeIcon = true;
-    const mediaElements = document.querySelectorAll('video, audio');
-    mediaElements.forEach(element => {
-        element.volume = percent;
-    });
-
-}
+console.log("content.js loaded");
 
 
 var audioContext = null;
@@ -44,11 +6,13 @@ var audioContext = null;
 
 
 let elements = new Map(); // Map to store GainNode for each HTMLMediaElement
-
+let players = new Map(); // Map to store Tone.Player for each HTMLMediaElement
 function amplifyVolume(gainValue) {
+
     if (!audioContext) {
         console.log("Creating new audio context");
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
     }
 
 
@@ -75,6 +39,7 @@ function amplifyVolume(gainValue) {
 
         gainNode.gain.value = gainValue;
     });
+
 }
 
 
@@ -82,20 +47,46 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
     if (request.command == "volume") {
         const level = request.level * .01;
+
+        //const requireddB = Math.round(20 * Math.log10(level));
         console.log("content received volume command VOLUME: ", level);
-        /*if (level > 1) {
-            amplifyVolume(level);
-        }
-        else {
-            adjustVolume(level);
-        }
-        */
+        
+
+
         amplifyVolume(level);
     }
 
 });
 
 
+function handleNewAudioSource(event){
+    console.log("New audio source detected");
+    // Get the current tab and get the volume if exists and call updateVolume
+    chrome.runtime.sendMessage({command: "getTabInfo"}, function(response) {
+        let volume = response.volume !== undefined ? response.volume * 0.01 : 100 * 0.01;
+        amplifyVolume(volume);
+    });
+}
+
+var mediaElements = document.querySelectorAll('audio, video');
+mediaElements.forEach(element => {
+    element.addEventListener('play', handleNewAudioSource);
+});
+
+const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+        if(mutation.type == "childList"){
+            mutation.addedNodes.forEach(node => {
+                if(node.nodeName.toLowerCase() == "audio" || node.nodeName.toLowerCase() == "video"){
+                    node.addEventListener('play', handleNewAudioSource);
+                }
+            });
+        }
+    });
+});
+
+// Start observing
+observer.observe(document.body, { childList: true, subtree: true });
 
 
 
