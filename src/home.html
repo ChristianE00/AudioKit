@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Home</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="bg-gradient-to-r from-red-500 to-yellow-500 flex flex-col items-center justify-center h-[500px]">
+    <div class="py-6 slider  w-128 h-15 p-8 pl-10 bg-white rounded-full flex items-center shadow-2xl">
+        <p class="text-lg font-semibold pl-8 text-black">Volume</p>
+        <input type="range" id="volumeSlider" min="0" max="200"
+            class="appearance-none w-96 h-0.5 bg-black border-none outline-none">
+        <p id="rangeValue">100</p>
+    </div>
+    <div class="slider2 w-128 h-15 p-8 pl-10 bg-white rounded-full flex items-center shadow-2xl mt-20 py-6">
+        <p class="text-lg font-semibold pl-8 text-black">Slider 2</p>
+        <input type="range" id="volumeSlider" min="0" max="200"
+            class="appearance-none w-96 h-0.5 bg-black border-none outline-none">
+        <p id="frequencyRangeValue">100</p>
+    </div>
+    <script src="./popup.js" type="module"></script>
+</body>
+
+</html>
