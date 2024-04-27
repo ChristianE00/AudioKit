@@ -15,7 +15,6 @@ const app = Vue.createApp({
 app.mount('#app');
 */
 
-// Load the current volume for the tab
 document.addEventListener('DOMContentLoaded', function () {
     var rangeInput = document.getElementById('volumeSlider');
     var rangeValue = document.getElementById('rangeValue');
@@ -48,6 +47,20 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Elements not found');
         }
 
+        document.getElementById('defaultButton').addEventListener('click', function (){
+            var volume = 100;
+            var querying = chrome.tabs.query || browser.tabs.query;
+            chrome.storage.sync.set({ [tabKey]: volume }); // Save the value with the tab URL as the key
+            document.getElementById('volumeSlider').value = 100;
+            document.getElementById('rangeValue').innerText = 100;
+            querying({ active: true, currentWindow: true }, function (tabs) {
+                messaging({ command: "background", level: volume, tab: tabs[0].id }, function (response) {
+
+                });
+            });
+            
+        });
+
 
         document.getElementById('volumeSlider').addEventListener('change', function () {
             var volume = this.value;
@@ -66,3 +79,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+
+
