@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         // Get the current volume for this tab
         var currentTab = tabs[0];
-        var tabKey = String(currentTab.url); // Use the tab URL as the key
+        var tabKey = String(currentTab.id); // Use the tab id as the key
         chrome.storage.sync.get(tabKey, function (data) {
             var volume = data[tabKey];
             if (volume == undefined) {
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('defaultButton').addEventListener('click', function (){
             var volume = 100;
             var querying = chrome.tabs.query || browser.tabs.query;
-            chrome.storage.sync.set({ [tabKey]: volume }); // Save the value with the tab URL as the key
+            chrome.storage.sync.set({ [tabKey]: volume }); // Save the value with the tab id as the key
             document.getElementById('volumeSlider').value = 100;
             document.getElementById('rangeValue').innerText = 100;
             querying({ active: true, currentWindow: true }, function (tabs) {
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             console.log('saving slider: ' + volume)
             var querying = chrome.tabs.query || browser.tabs.query;
-            chrome.storage.sync.set({ [tabKey]: this.value }); // Save the value with the tab URL as the key
+            chrome.storage.sync.set({ [tabKey]: this.value }); // Save the value with the tab id as the key
             querying({ active: true, currentWindow: true }, function (tabs) {
                 messaging({ command: "background", level: volume, tab: tabs[0].id }, function (response) {
     
