@@ -4,7 +4,7 @@
 <head>
     <title>Home</title>
 
-    <link href='https://fonts.googleapis.com/css?family=Bebas+Neue|Permanent+Marker' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Bebas+Neue|Permanent+Marker|Potta+One' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!--<link rel="stylesheet" href="./css/style.css">-->
     <link href="./css/output.css" rel="stylesheet">
@@ -19,13 +19,15 @@
     <div class="mx-4 rounded-lg shadow-lg bg-indigo-300 border-2 border-indigo-600 bg-opacity-70">
         <div class="text-center">
             <h4 class="text-lg text-indigo-900 "><b>Stay tuned for more updates</b></h4>
-            <p class="mt-2 text-sm text-justify text-blue-900 pb-3 mx-4">
+            <p class="mt-2 text-sm  text-blue-900 pb-3 mx-4">
                 Use the slider below to control the volume of the current tab. Switch to any tab playing audio with just one click.
             </p>
 
         </div>
     </div>
     </div>
+
+    <!-- Volume Slider -->
     <div class="py-6 slider w-full bg-gray-800 rounded flex items-center shadow-xl">
         <div class="slider w-full m-2">
             <input type="range" id="volumeSlider" min="0" max="200"
@@ -44,13 +46,38 @@
         <button class="flex-1 mx-1 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"> <i class="fa-solid fa-rocket px-2"></i> <span class="hand-written">Bass Boost</span></button>
     </div>
       
-</body>
-<footer>
+    <!-- Suggestion Box -->
+    <div class="w-full mb-1 mt-11" id="removeElement">
+        <div class="update mx-4 rounded-lg shadow-lg bg-gray-200 border-2 border-indigo-600 bg-opacity-70  ">
+            <div class=" w-full flex flex-row-reverse ">
+                <div class=" justify-self-end mr-1">
+                    <button class="text-white" id="signalRemoveElement">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="flex-1 justify-self-center text-center">
+                <h4 class="text-lg flex-1 text-indigo-400 update"><b>Suggestions?</b></h4>
+                </div>
+            </div>
+                <p class="mt-2 text-xs text-justify text-gray-500 mx-4">
+                    We would love to here any suggestions you might have!
+                </p>
+                <p class="text-center">
+                    <a href="https://christianewing.com" class="update text-indigo-400 text-center">CLICK HERE</a>
+                <p>
+        </div>
+    </div>
 
+</body>
+
+<footer class="mt-auto mb-4">
+    <p class=" text-center text-white"><span class="text-blue-300">Pay what you like</span> -- Made with <i class="fa-solid fa-heart text-red-600"></i> by <a href="https://github.com/ChristianE00" class="text-blue-600">Christian Ewing</a></p>
 </footer>
+<!--
 <div class="mt-auto mb-3">
     <p class=" text-center text-white"><span class="text-blue-300">Pay what you like</span> -- Made with <i class="fa-solid fa-heart text-red-600"></i> by <a href="https://github.com/ChristianE00" class="text-blue-600">Christian Ewing</a></p>
 </div>
+-->
 </html>
 
 

@@ -47,6 +47,12 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Elements not found');
         }
 
+        // Remove Element
+        document.getElementById('signalRemoveElement').addEventListener('click', function() {
+            document.getElementById('removeElement').remove()
+            console.log('CLICK');
+        });
+
         document.getElementById('defaultButton').addEventListener('click', function (){
             var volume = 100;
             var querying = chrome.tabs.query || browser.tabs.query;
