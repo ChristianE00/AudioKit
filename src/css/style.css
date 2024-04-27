@@ -1,4 +1,9 @@
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 /*
 body {
     @apply bg-gradient-to-r from-red-500 to-yellow-500 flex flex-col items-center justify-content-center h-screen;
