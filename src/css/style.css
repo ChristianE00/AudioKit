@@ -24,6 +24,18 @@ body {
     @apply bg-black;
   }
   */
+
+h1 {
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+button {
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+.hand-written {
+  font-family: 'Permanent Marker', cursive;
+}
 body {
     width: 700px;
     height: 500px;

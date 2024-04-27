@@ -3,25 +3,51 @@
 
 <head>
     <title>Home</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Bebas+Neue|Permanent+Marker' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="./css/style.css">
     <script src="https://cdn.tailwindcss.com"></script>
-
+    <script src="./popup.js" type="module"></script>
 </head>
 
-<body class="bg-gradient-to-r from-red-500 to-yellow-500 flex flex-col items-center justify-center h-[500px]">
-    <div class="py-6 slider  w-128 h-15 p-8 pl-10 bg-white rounded-full flex items-center shadow-2xl">
-        <p class="text-lg font-semibold pl-8 text-black">Volume</p>
-        <input type="range" id="volumeSlider" min="0" max="200"
-            class="appearance-none w-96 h-0.5 bg-black border-none outline-none">
-        <p id="rangeValue">100</p>
-    </div>
-    <div class="slider2 w-128 h-15 p-8 pl-10 bg-white rounded-full flex items-center shadow-2xl mt-20 py-6">
-        <p class="text-lg font-semibold pl-8 text-black">Slider 2</p>
-        <input type="range" id="volumeSlider" min="0" max="200"
-            class="appearance-none w-96 h-0.5 bg-black border-none outline-none">
-        <p id="frequencyRangeValue">100</p>
-    </div>
-    <script src="./popup.js" type="module"></script>
-</body>
+<body class="bg-gray-800 flex flex-col w-96 min-h-screen ">
+    <!-- Guide Sentence -->
+    <h1 class="block pl-2 text-xl font-bold text-gray-800 dark:text-white ">Volume Master</h1>
+    <div class="w-full mb-3 mt-2">
+    <div class="mx-4 rounded-lg shadow-lg bg-indigo-300 border-2 border-indigo-600 ">
+        <div class="text-center">
+            <h4 class="text-lg text-indigo-900 "><b>Stay tuned for more updates</b></h4>
+            <p class="mt-2 text-sm text-justify text-blue-900 pb-3 mx-4">
+                Use the slider below to control the volume of the current tab. Switch to any tab playing audio with just one click.
+            </p>
 
+        </div>
+    </div>
+    </div>
+    <div class="py-6 slider w-full bg-gray-800 rounded flex items-center shadow-xl">
+        <div class="slider w-full m-2">
+            <input type="range" id="volumeSlider" min="0" max="200"
+                class="appearance-none rounded-full bg-gray-400 w-full h-2 bg-black border-none outline-none">
+            <p class="text-lg font-semibold text-gray-400 text-black text-center">
+                Volume: <span class="hand-written" id="rangeValue">100</span> %
+            </p>
+
+        </div>
+    </div>
+
+    <!-- Default  Voice Boost  Bass Boost buttons -->
+    <div class="flex p-x-4 w-full">
+        <button class="flex-1 mx-1 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"> <i class="fa-solid fa-rotate-left px-2"></i><span class="hand-written">Default</span></button>
+        <button class="flex-1 mx-1 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"> <i class="fa-solid fa-microphone px-2"></i> <span class="hand-written">Voice Boost</span></button>
+        <button class="flex-1 mx-1 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"> <i class="fa-solid fa-rocket px-2"></i> <span class="hand-written">Bass Boost</span></button>
+    </div>
+      
+</body>
+<footer>
+
+</footer>
+<div class="mt-auto mb-3">
+    <p class=" text-center text-white"><span class="text-blue-300">Pay what you like</span> -- Made with <i class="fa-solid fa-heart text-red-600"></i> by <a href="https://github.com/ChristianE00" class="text-blue-600">Christian Ewing</a></p>
+</div>
 </html>
