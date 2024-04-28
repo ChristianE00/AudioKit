@@ -67,7 +67,19 @@ document.addEventListener('DOMContentLoaded', function () {
             
         });
 
+      // links
+      var links =  document.getElementsByTagName('a');
+      for (var i = 0; i < links.length; i++) {
+        (function () {
+          var ln = links[i];
+          var location = ln.href;
+          ln.onclick = function () {
+            chrome.tabs.create({active: true, url: location});
+          };
+        })();
+      }
 
+       // Listen for changes to the slider
         document.getElementById('volumeSlider').addEventListener('change', function () {
             var volume = this.value;
             if (volume == undefined) {
