@@ -20,3 +20,4 @@ npm run build
 - Bass Boost
 - 'CLICK ME' redirect link
 - Move lambda expressions to functions
+- Audio level not working for embedded videos in Patreon 

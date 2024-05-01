@@ -1,31 +1,20 @@
 {
-    "manifest_version": 2,
-    "name": "Volume Adjuster and Equalizer", 
+    "manifest_version": 3,
+    "name": "Volume Adjuster and Equalizer",
     "version": "1.0",
     "description": "A simple volume adjuster and equalizer extension",
-    "permissions": ["activeTab", "storage", "<all_urls>, tabs"],
-    "content_security_policy": "script-src 'self' https://cdn.tailwindcss.com;",
-    "browser_action": {
-        "default_popup": "src/home.html",
-        "default_icon": "src/icon.png"
+    "permissions": [
+      "storage",
+      "tabs",
+      "tabCapture",
+      "offscreen",
+      "activeTab"
+    ],
+    "action": {
+      "default_popup": "home.html",
+      "default_icon": "icon.png"
     },
-    "content_scripts": [    
-
-        {
-            "matches": ["<all_urls>"],
-            "js": ["src/content.js"],
-            "type": "module"
-        }
-    ],
-    "web_accessible_resources": [
-        "src/popup.js",
-        "src/popup.html",
-        "src/active.ico",
-        "node_modules/tone/build/tone.js"
-    ],
     "background": {
-        "scripts": ["src/background.js"],
-        "type": "module",
-        "persistent": false
+      "service_worker": "worker.js"
     }
-}
+  }

@@ -24,27 +24,28 @@
             </p>
 
         </div>
+        <button class="play m-3">Play</button>
+        <button class="pause m-3">Pause</button>
     </div>
     </div>
 
-    <!-- Volume Slider -->
-    <div class="py-6 slider w-full bg-gray-800 rounded flex items-center shadow-xl">
-        <div class="slider w-full m-2">
-            <input type="range" id="volumeSlider" min="0" max="200"
-                class="appearance-none rounded-full bg-gray-400 w-full h-2 bg-black border-none outline-none">
-            <p class="text-lg font-semibold text-gray-400 text-black text-center">
-                Volume: <span class="hand-written" id="rangeValue">100</span> %
-            </p>
-
-        </div>
+   <!-- Volume Slider -->
+   <div class="py-6 slider w-full bg-gray-800 rounded flex items-center shadow-xl">
+    <div class="slider w-full m-2">
+        <input type="range" id="volumeSlider" min="0" max="200"
+            class="appearance-none rounded-full bg-gray-400 w-full h-2 bg-black border-none outline-none">
+        <p class="text-lg font-semibold text-gray-400 text-black text-center">
+            Volume: <span class="hand-written" id="rangeValue">100</span> %
+        </p>
     </div>
+</div> 
 
-    <!-- Default  Voice Boost  Bass Boost buttons -->
-    <div class="flex p-x-4 w-full">
-        <button class="flex-1 mx-1 py-2 bg-gray-700 text-white rounded hover:bg-gray-600" id="defaultButton"> <i class="fa-solid fa-rotate-left px-2"></i><span class="hand-written">Default</span></button>
-        <button class="flex-1 mx-1 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"> <i class="fa-solid fa-microphone px-2"></i> <span class="hand-written">Voice Boost</span></button>
-        <button class="flex-1 mx-1 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"> <i class="fa-solid fa-rocket px-2"></i> <span class="hand-written">Bass Boost</span></button>
-    </div>
+   <!-- Default  Voice Boost  Bass Boost buttons -->
+   <div class="flex p-x-4 w-full">
+    <button class="flex-1 mx-1 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 js-audio-equalizer__preset" id="defaultButton" data-equalizer-type="default"> <i class="fa-solid fa-rotate-left px-2"></i><span class="hand-written">Default</span></button>
+    <button class="flex-1 mx-1 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 js-audio-equalizer__preset" data-equalizer-type="voice"> <i class="fa-solid fa-microphone px-2"></i> <span class="hand-written">Voice Boost</span></button>
+    <button class="flex-1 mx-1 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 js-audio-equalizer__preset" data-equalizer-type="bass"> <i class="fa-solid fa-rocket px-2"></i> <span class="hand-written">Bass Boost</span></button>
+</div> 
       
     <!-- Suggestion Box -->
     <div class="w-full mb-1 mt-11" id="removeElement">

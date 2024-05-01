@@ -5,7 +5,7 @@ module.exports = {
    *       will look in all subdirectories of src  
    *   * - A wildcard that matches any file name 
   * */
-  content: ["./src/**/*.{html,js}"],
+  content: ["./**/*.{html,js}"],
   theme: {
     extend: {},
   },

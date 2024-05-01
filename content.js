@@ -1,20 +1,15 @@
+
+/*
 console.log("content.js loaded");
-
-
 var audioContext = null;
-
-
-
 let elements = new Map(); // Map to store GainNode for each HTMLMediaElement
 let players = new Map(); // Map to store Tone.Player for each HTMLMediaElement
-function amplifyVolume(gainValue) {
 
+function amplifyVolume(gainValue) {
     if (!audioContext) {
         console.log("Creating new audio context");
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
     }
-
 
     const mediaElements = document.querySelectorAll('video, audio');
     mediaElements.forEach(element => {
@@ -36,49 +31,47 @@ function amplifyVolume(gainValue) {
             elements.set(element, gainNode);
         }
 
-
         gainNode.gain.value = gainValue;
     });
-
 }
 
-
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-
     if (request.command == "volume") {
-        const level = request.level * .01;
-
-        //const requireddB = Math.round(20 * Math.log10(level));
+        const level = request.level * 0.01;
         console.log("content received volume command VOLUME: ", level);
-        
-
-
         amplifyVolume(level);
     }
-
 });
 
-
-function handleNewAudioSource(event){
+function handleNewAudioSource(event) {
     console.log("New audio source detected");
     // Get the current tab and get the volume if exists and call updateVolume
-    chrome.runtime.sendMessage({command: "getTabInfo"}, function(response) {
+    chrome.runtime.sendMessage({ command: "getTabInfo" }, function (response) {
         let volume = response.volume !== undefined ? response.volume * 0.01 : 100 * 0.01;
         amplifyVolume(volume);
     });
 }
 
-var mediaElements = document.querySelectorAll('audio, video');
-mediaElements.forEach(element => {
+function addPlayEventListener(element) {
     element.addEventListener('play', handleNewAudioSource);
-});
+}
 
+// Handle existing audio and video elements
+var mediaElements = document.querySelectorAll('audio, video');
+mediaElements.forEach(addPlayEventListener);
+
+// Create a MutationObserver to handle dynamically added audio and video elements
 const observer = new MutationObserver(mutations => {
     mutations.forEach(mutation => {
-        if(mutation.type == "childList"){
+        if (mutation.type === "childList") {
             mutation.addedNodes.forEach(node => {
-                if(node.nodeName.toLowerCase() == "audio" || node.nodeName.toLowerCase() == "video"){
-                    node.addEventListener('play', handleNewAudioSource);
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                    if (node.nodeName.toLowerCase() === "audio" || node.nodeName.toLowerCase() === "video") {
+                        addPlayEventListener(node);
+                    }
+                    // Check for audio and video elements inside the added node
+                    const mediaElements = node.querySelectorAll('audio, video');
+                    mediaElements.forEach(addPlayEventListener);
                 }
             });
         }
@@ -119,8 +112,11 @@ sourceNodes = [];
 varaudioContext = null;
 var filter = null;
 var gainNode = null;
+*/
+
 
 //adjustFrequency(440, 10);
+/*
 function adjustFrequency(frequency, dB) {
 
     if (!audioContext) {
@@ -178,3 +174,4 @@ function adjustFrequency(frequency, dB) {
         audioElement.play();
     });
 }
+*/
