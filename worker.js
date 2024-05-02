@@ -59,7 +59,8 @@ async function updateTabVolume(tabId, volume){
     else{
       await chrome.offscreen.createDocument({
         url: 'offscreen.html',
-        reasons: ['AUDIO_PLAYBACK'],
+        //reasons: ['AUDIO_PLAYBACK'],
+        reasons: ['USER_MEDIA'],
         justification: 'Adjust tab audio volume'
       });
       console.log("Created offscreen document");
