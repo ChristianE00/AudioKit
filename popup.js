@@ -1,45 +1,63 @@
+
+
+
+
 document.addEventListener('DOMContentLoaded', async () => {
     console.log("popup loaded");
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
     const tabId = tabs[0].id;
     const url = tabs[0].url;
+    
 
-    document.querySelector(".play").addEventListener("click", () => {
-        chrome.runtime.sendMessage({
-            type: "play",
-            play: { source: "sound.mp3", volume: 1},
-        });
+    let rangeValue = document.getElementById('rangeValue');
+    let volumeSlider = document.getElementById('volumeSlider');
+
+    // Set volume slider and range value to the current volume level
+     chrome.runtime.onMessage.addListener( (msg) => {
+      console.log("[POPUP] Message received from worker, type: ", msg.type);
+      switch (msg.type) {
+        case "popup-level":
+          console.log("[POPUP] Popup loaded message received level: ", msg.level);
+          const level = msg.level
+          rangeValue.innerText = level;
+          volumeSlider.value = level;
+          break;
+      }
     });
 
-    document.querySelector(".pause").addEventListener("click", () => {
-      chrome.runtime.sendMessage({ type: "adjustVolume" });
+
+    // Let the service-worker know that the popup has loaded
+    chrome.runtime.sendMessage({ type: 'popup-loaded', tabId: tabId });
+
+
+    // Reset tab volume to 100%
+    document.querySelector(".defaultButton").addEventListener("click", () => {
+      updateVolume(1);
     });
-
-
 
     volumeSlider.addEventListener('input', async (event) => {
+      rangeValue.innerText = event.target.value;
       const volume = event.target.value / 100;
       console.log("Slider MOVED value: ", volume);
-      rangeValue.innerText = volume;
+      
       // Send the volume level to the service-worker
       await chrome.runtime.sendMessage({
         type: 'adjust-level',
         level: volume,
       });
     });
-    /*
-    await initAudioGainUI(tabId, url);
-    await initSliderEqualizerUI(tabId);
-    await initActionResetUI(tabId);
-    await initActionRestoreUI(tabId, url);
-  */
   });
+
+  async function updateVolume(level) {
+   await chrome.runtime.sendMessage({ type: "adjust-level", level: level });
+  
+  }
 
 
  /* 
   async function initAudioGainUI(tabId, url) {
-    const volumeSlider = document.getElementById('volumeSlider');
-    const rangeValue = document.getElementById('rangeValue');
+
+
   
     const audioData = await chrome.runtime.sendMessage({
       action: 'popupAudioDataGet',
