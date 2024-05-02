@@ -60,9 +60,19 @@ async function updateTabVolume(tabId, volume){
       console.log("Created offscreen document");
     }
 
+    // Get a MediaStream for the Active Tab
+    const streamId = await chrome.tabCapture.getMediaStreamId({
+      targetTabId: tabId
+    });
+
+    // Send the stream ID to the offscreen document to start recording
+    chrome.runtime.sendMessage({ type: 'start-recording', target: 'offscreen', data: streamId });
+
+    /*
     // Send the tabId to the offscreen document
     await chrome.runtime.sendMessage({ type: "lower", offscreen: true, tabId: tabId});
     console.log("Sent message to offscreen document");
+    */
 }
 
 
