@@ -32,7 +32,7 @@ async function handleTabUpdate(tabId, changeInfo, tab) {
 */
 
 
-
+const activeStreams = new Map();
 // Messages from the popup
 chrome.runtime.onMessage.addListener(async (msg) => {
   console.log("Message received from popup");
@@ -42,6 +42,11 @@ chrome.runtime.onMessage.addListener(async (msg) => {
       currTab = await getCurrentTab();
       console.log("Current tab is: ", currTab.id);
       await updateTabVolume(currTab.id, 0.5);
+      break;
+    case "adjust-level":
+      console.log("[SERVICE-WORKER] Adjust level message received");
+      currTab = await getCurrentTab();
+      await updateTabVolume(currTab.id, msg.level);
       break;
   }
 });
@@ -60,19 +65,19 @@ async function updateTabVolume(tabId, volume){
       console.log("Created offscreen document");
     }
 
-    // Get a MediaStream for the Active Tab
-    const streamId = await chrome.tabCapture.getMediaStreamId({
-      targetTabId: tabId
-    });
-
-    // Send the stream ID to the offscreen document to start recording
-    chrome.runtime.sendMessage({ type: 'start-recording', target: 'offscreen', data: streamId });
-
-    /*
-    // Send the tabId to the offscreen document
-    await chrome.runtime.sendMessage({ type: "lower", offscreen: true, tabId: tabId});
-    console.log("Sent message to offscreen document");
-    */
+    if (activeStreams.has(tabId)){
+      chrome.runtime.sendMessage({ type: 'adjust-level', target: 'offscreen', tabId: tabId, level: volume});
+    }
+    else{
+      // Get a MediaStream for the Active Tab
+      const streamId = await chrome.tabCapture.getMediaStreamId({
+        targetTabId: tabId
+      });
+      // Save the stream ID to the activeStreams Map
+      activeStreams.set(tabId, tabId);
+      // Send the stream ID to the offscreen document to start recording
+      chrome.runtime.sendMessage({ type: 'start-recording', target: 'offscreen', data: streamId, tabId: tabId, level: volume});
+    }
 }
 
 

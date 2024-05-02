@@ -10,52 +10,52 @@ chrome.runtime.onMessage.addListener(async (msg) => {
     return;
   }
 
+  
   if (msg.type === 'start-recording'){
     console.log('Received start-recording message');
-    const media = await navigator.mediaDevices.getUserMedia({
-      audio: {
-        mandatory: {
-          chromeMediaSource: "tab",
-          chromeMediaSourceId: msg.data,
-        },
-      },
-      video: {
-        mandatory: {
-          chromeMediaSource: "tab",
-          chromeMediaSourceId: msg.data,
-        },
-      },
-    });
 
-    // Continue to play the captured audio to the user
-    const output = new AudioContext();
-    const source = output.createMediaStreamSource(media);
-    //Lower volume by 1/2
-    const gainNode = output.createGain();
-    gainNode.gain.value = 0.1;
-    console.log("Audio lowered");
-    source.connect(gainNode);
-    gainNode.connect(output.destination);
-  }
 
-  /*
-  switch (msg.type) {
-    case "lower":
-      console.log("Lowering the volume tabId: ", msg.tabId);
-      if (!audioContext) {
-        audioContext = new AudioContext();
+      if (gainNodes.has(msg.tabId)){
+        console.log('[ERROR] found gain node ');
       }
-      if (!gainNodes.has(msg.tabId)) { // Use 'gainNodes' instead of 'gainNode'
-        const gainNode = audioContext.createGain(); // Rename this variable to avoid shadowing
-        gainNode.gain.value = 0.5;
-        gainNode.connect(audioContext.destination);
-        gainNodes.set(msg.tabId, gainNode); // Use 'gainNodes' instead of 'gainNode'
-        console.log("Audio lowered");
+      else {
+        console.log('Creating new gain node');
+        const media = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            mandatory: {
+              chromeMediaSource: "tab",
+              chromeMediaSourceId: msg.data,
+            },
+          },
+        });
+
+        // Continue to play the captured audio to the user
+        const output = new AudioContext();
+        const source = output.createMediaStreamSource(media);
+        //Lower volume by level
+        const gainNode = output.createGain();
+        gainNode.gain.value = msg.level;
+        source.connect(gainNode);
+        gainNode.connect(output.destination);
+        // Save the gain node for future changes
+        gainNodes.set(msg.tabId, gainNode);
       }
-      break;
-    case "pause":
-      console.log("Pausing the audio");
-      break;
-  }
-  */
+  } 
+
+    if (msg.type === 'adjust-level'){
+      
+      if (gainNodes.has(msg.tabId)){
+        console.log('found gain node');
+        const gainNode = gainNodes.get(msg.tabId);
+        gainNode.gain.value = msg.level;
+      }
+      else {
+        console.log(" [ERROR] No gain node found");
+      }
+    }
+
+
+
+
+
 });

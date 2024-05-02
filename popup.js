@@ -14,6 +14,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelector(".pause").addEventListener("click", () => {
       chrome.runtime.sendMessage({ type: "adjustVolume" });
     });
+
+
+
+    volumeSlider.addEventListener('input', async (event) => {
+      const volume = event.target.value / 100;
+      console.log("Slider MOVED value: ", volume);
+      rangeValue.innerText = volume;
+      // Send the volume level to the service-worker
+      await chrome.runtime.sendMessage({
+        type: 'adjust-level',
+        level: volume,
+      });
+    });
     /*
     await initAudioGainUI(tabId, url);
     await initSliderEqualizerUI(tabId);
@@ -43,18 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       volumeSlider.value = 100;
     }
   
-    volumeSlider.addEventListener('input', async (event) => {
-      const volume = event.target.value;
-      console.log("Slider MOVED");
-      rangeValue.innerText = volume;
   
-      await chrome.runtime.sendMessage({
-        action: 'popupGainChange',
-        target: 'service-worker',
-        tabId: tabId,
-        volumeValue: volume,
-      });
-    });
   }
   
   async function initSliderEqualizerUI(tabId) {
