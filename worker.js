@@ -1,8 +1,6 @@
 
 console.log("Worker is running");
 
-
-
 const activeStreams = new Map();
 // Messages from the popup
 chrome.runtime.onMessage.addListener(async (msg) => {
@@ -14,14 +12,6 @@ chrome.runtime.onMessage.addListener(async (msg) => {
       console.log("[SERVICE-WORKER] Popup loaded message received sedning level: ", level);
       chrome.runtime.sendMessage({ type: 'popup-level', level: level});
       break;
-    /*
-    case "play":
-      console.log("Play message received");
-      let currTab = await getCurrentTab();
-      console.log("Current tab is: ", currTab.id);
-      await updateTabVolume(currTab.id, 0.5);
-      break;
-    */
     case "adjust-level":
       console.log("[SERVICE-WORKER] Adjust level message received");
       var currTab = await getCurrentTab();
@@ -66,9 +56,9 @@ async function updateTabVolume(tabId, volume){
 async function getCurrentTab() {
   let queryOptions = { active: true, currentWindow: true };
   let [tab] = await chrome.tabs.query(queryOptions);
-  //console.log("Current tab is: ", tab);
   return tab;
 }
+
 
 function getTabLevel(tabId){
   let level = 100;

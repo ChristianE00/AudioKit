@@ -1,5 +1,4 @@
 console.log("Offscreen is running");
-
 let audioContext;
 const gainNodes = new Map(); // Change the variable name to 'gainNodes'
 
@@ -9,11 +8,9 @@ chrome.runtime.onMessage.addListener(async (msg) => {
     console.log("Message is not from offscreen");
     return;
   }
-
   
   if (msg.type === 'start-recording'){
     console.log('Received start-recording message');
-
 
       if (gainNodes.has(msg.tabId)){
         console.log('[ERROR] found gain node ');
@@ -53,9 +50,5 @@ chrome.runtime.onMessage.addListener(async (msg) => {
         console.log(" [ERROR] No gain node found");
       }
     }
-
-
-
-
 
 });
