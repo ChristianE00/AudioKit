@@ -3,20 +3,20 @@ let audioContext;
 const gainNodes = new Map(); // Change the variable name to 'gainNodes'
 
 chrome.runtime.onMessage.addListener(async (msg) => {
-  console.log("Message received from WORKER");
+  console.log("[OFFSCREEN] Message received from WORKER");
   if (msg.target !== 'offscreen' ) {
-    console.log("Message is not from offscreen");
+    console.log("[OFFSCREEN] Message is not from offscreen");
     return;
   }
   
   if (msg.type === 'start-recording'){
-    console.log('Received start-recording message');
+    console.log('[OFFSCREEN] Received start-recording message');
 
       if (gainNodes.has(msg.tabId)){
-        console.log('[ERROR] found gain node ');
+        console.log('[OFFSCREEN] ERROR found gain node ');
       }
       else {
-        console.log('Creating new gain node');
+        console.log('[OFFSCREEN] Creating new gain node');
         const media = await navigator.mediaDevices.getUserMedia({
           audio: {
             mandatory: {

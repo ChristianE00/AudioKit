@@ -36,9 +36,12 @@ async function updateTabVolume(tabId, volume){
     }
 
     if (activeStreams.has(tabId)){
+      console.log("[WORKER] tab found in activeStreams W/ tabId: ", tabId);
       chrome.runtime.sendMessage({ type: 'adjust-level', target: 'offscreen', tabId: tabId, level: volume});
+
     }
     else{
+      console.log("[WORKER] tab not found in activeStreams W/ tabId: ", tabId);
       // Get a MediaStream for the Active Tab
       const streamId = await chrome.tabCapture.getMediaStreamId({
         targetTabId: tabId
