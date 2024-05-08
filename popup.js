@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let volumeSlider = document.getElementById('volumeSlider');
     let voiceBoost = document.getElementById('voiceBoost');
     let bassBoost = document.getElementById('bassBoost'); 
+    let defaultButton = document.getElementById("defaultButton");
 
     // Currently for testing purposes
     voiceBoost.addEventListener('click', async () => {
@@ -19,6 +20,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     bassBoost.addEventListener('click', async () => {
       console.log("[POPUP] Bass Boost clicked");
       await chrome.runtime.sendMessage({ type: 'testGet'});
+    });
+
+    // Clear storage for testing purposes
+    defaultButton.addEventListener('click', async () => {
+      console.log("[POPUP] Default Button clicked");
+      await chrome.runtime.sendMessage({ type: 'clear-storage'});
     });
 
     // Set volume slider and range value to the current volume level
@@ -38,9 +45,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     chrome.runtime.sendMessage({ type: 'popup-loaded', tabId: tabId });
 
     // Reset tab volume to 100%
+    /*
     document.querySelector(".defaultButton").addEventListener("click", () => {
       updateVolume(1);
     });
+    */
 
     volumeSlider.addEventListener('input', async (event) => {
       rangeValue.innerText = event.target.value;
