@@ -6,6 +6,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     const url = tabs[0].url;
     let rangeValue = document.getElementById('rangeValue');
     let volumeSlider = document.getElementById('volumeSlider');
+    let voiceBoost = document.getElementById('voiceBoost');
+    let bassBoost = document.getElementById('bassBoost'); 
+
+    // Currently for testing purposes
+    voiceBoost.addEventListener('click', async () => {
+      console.log("[POPUP] Voice Boost clicked");
+      await chrome.runtime.sendMessage({ type: 'testSave'});
+    });
+
+    // Currently for testing purposes
+    bassBoost.addEventListener('click', async () => {
+      console.log("[POPUP] Bass Boost clicked");
+      await chrome.runtime.sendMessage({ type: 'testGet'});
+    });
 
     // Set volume slider and range value to the current volume level
      chrome.runtime.onMessage.addListener( (msg) => {

@@ -17,8 +17,36 @@ chrome.runtime.onMessage.addListener(async (msg) => {
       var currTab = await getCurrentTab();
       await updateTabVolume(currTab.id, msg.level);
       break;
+
+    case "testSave":
+      console.log("[SERVICE-WORKER] Test save message received");
+      var currTab = await getCurrentTab();
+      await testSave(currTab.id);
+      break;
+
+    case "testGet":
+      console.log("[SERVICE-WORKER] Test get message received");
+      var currTab = await getCurrentTab();
+      await testGet(currTab.id);
+      break;
   }
 });
+
+async function testSave(tabId){
+  await chrome.storage.local.set({tabId: tabId}, function() {
+    console.log('[WORKER] Value is set to ' + tabId);
+  });
+}
+
+async function testGet(tabId){
+  const items = await chrome.storage.local.get('tabId');
+  if (items.tabId) {
+    console.log('[WORKER] Value found currently is ' + items.tabId);
+  }
+  else{
+    console.log('[WORKER] Value not found');
+  }
+}
 
 
 async function updateTabVolume(tabId, volume){
