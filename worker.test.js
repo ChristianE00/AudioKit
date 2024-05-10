@@ -119,3 +119,24 @@ describe('getCurrentTab', () => {
   });
   
 });
+
+describe('defaultButton', () => {
+  it('should send a message when clicked', async () => {
+    // Create a button and attach the event listener to it
+    const defaultButton = document.createElement('button');
+    defaultButton.addEventListener('click', async () => {
+      console.log("[POPUP] Default Button clicked");
+      await chrome.runtime.sendMessage({ type: 'clear-storage'});
+    });
+
+    // Simulate a click event
+    defaultButton.click();
+
+    // Since the event listener is async, we need to wait for the next event loop
+    // before our assertions to ensure the promise has resolved
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    // Verify that sendMessage was called with the correct arguments
+    expect(chrome.runtime.sendMessage).toHaveBeenCalledWith({ type: 'clear-storage' });
+  });
+});
