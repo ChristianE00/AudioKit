@@ -121,7 +121,7 @@ describe('getCurrentTab', () => {
 });
 
 describe('defaultButton', () => {
-  it('should send a message when clicked', async () => {
+  it('[DEFAULT BUTTON]should send a message when clicked', async () => {
     // Create a button and attach the event listener to it
     const defaultButton = document.createElement('button');
     defaultButton.addEventListener('click', async () => {
@@ -138,5 +138,20 @@ describe('defaultButton', () => {
 
     // Verify that sendMessage was called with the correct arguments
     expect(chrome.runtime.sendMessage).toHaveBeenCalledWith({ type: 'clear-storage' });
+  });
+
+});
+
+describe('bassBoost', () => {
+  it('[BASS BOOST BUTTON] should send a message when clicked', async() => {
+    const bassBoost = document.createElement('button');
+    bassBoost.addEventListener('click', async () => {
+      console.log("[POPUP] Bass Boost clicked");
+      await chrome.runtime.sendMessage({ type: 'testGet' });
+    });
+
+    bassBoost.click();
+    await new Promise(resolve => setTimeout(resolve, 0));
+    expect(chrome.runtime.sendMessage).toHaveBeenCalledWith({ type: 'testGet' });
   });
 });
