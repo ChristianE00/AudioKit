@@ -1,5 +1,16 @@
+function worker(a, b) {
 
-console.log("Worker is running");
+    return a + b;
+
+}
+
+function sum(a, b) {
+    return a + b;
+}
+
+module.exports = { worker, sum, getTabLevel};
+
+
 
 const activeStreams = new Map();
 // Messages from the popup
@@ -102,13 +113,6 @@ async function updateTabVolume(tabId, volume){
       chrome.runtime.sendMessage({ type: 'adjust-level', target: 'offscreen', tabId: tabId, level: volume});
       await saveTabLevel(tabIdS, volumeS);
     }
-    /*
-    if (activeStreams.has(tabId)){
-      console.log("[WORKER] tab found in activeStreams W/ tabId: ", tabId);
-      chrome.runtime.sendMessage({ type: 'adjust-level', target: 'offscreen', tabId: tabId, level: volume});
-
-    }
-    */
 
     // Tab doesn't exist
     else{
@@ -122,21 +126,6 @@ async function updateTabVolume(tabId, volume){
       chrome.runtime.sendMessage({ type: 'start-recording', target: 'offscreen', data: streamId, tabId: tabId, level: volume});
       await saveTabLevel(tabIdS, volumeS);
     }
-    /*
-    else{
-      console.log("[WORKER] tab not found in activeStreams W/ tabId: ", tabId);
-      // Get a MediaStream for the Active Tab
-      const streamId = await chrome.tabCapture.getMediaStreamId({
-        targetTabId: tabId
-      });
-      
-      // Send the stream ID to the offscreen document to start recording
-      chrome.runtime.sendMessage({ type: 'start-recording', target: 'offscreen', data: streamId, tabId: tabId, level: volume});
-    }
-
-      // Save the stream ID to the activeStreams Map
-      activeStreams.set(tabId, volume);
-      */
 }
 
 
@@ -145,55 +134,3 @@ async function getCurrentTab() {
   let [tab] = await chrome.tabs.query(queryOptions);
   return tab;
 }
-
-/*
-async function testSave(tabId){
-  //clear storage
-  let items = await chrome.storage.local.get('levels');
-  let tabLevels = null;
-
-  if(items.levels == null){
-    console.log('[WORKER] levels is null');
-    tabLevels = {
-      ["1"]: "100",
-      ["2"]: "50"
-    };
-  }
-  else{
-    tabLevels = items.levels;
-    tabLevels[tabId] = "100";
-  }
-  await chrome.storage.local.set({levels: tabLevels} );
-}
-*/
-
-/*
-async function testGet(tabId){
-  // const items = await chrome.storage.local.get('tabId');
-   const items = await chrome.storage.local.get('levels');
-  // const item = await chrome.storage.local.get("2");
-  // console.log('[WORKER] value is ', item);
-   console.log('[WORKER] values are ', JSON.stringify(items.levels));
-  
-  //if (items.tabId) {
-    //console.log('[WORKER] Value found currently is ' + items.tabId);
-  //}
-  //else{
-    //console.log('[WORKER] Value not found');
-  //}
-}
-*/
-
-
-// NOTE: DEPRECATED
-/*
-function getTabLevel(tabId){
-  let level = 100;
-  if (activeStreams.has(tabId)){
-    level = activeStreams.get(tabId) * 100;
-
-  }
-  return level;
-}
-*/
-
