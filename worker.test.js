@@ -1,4 +1,4 @@
-const { worker, sum, getTabLevel, containsTab } = require('./worker');
+const { worker, sum, getTabLevel, containsTab, getCurrentTab } = require('./worker');
 
 // Example test
 test('adds 1 + 2 to equal 3', () => {
@@ -95,5 +95,17 @@ describe('containsTab', () => {
     expect(tabExists).toBe(true);
   });
 
+});
 
+
+// getCurrentTab tests
+describe('getCurrentTab', () => {
+  it('should return the current tab', async () => {
+    const mockTab = { id: 1, url: 'http://exmaple.com' };
+    chrome.tabs.query.mockResolvedValue([mockTab]); 
+    const tab = await getCurrentTab();
+    expect(chrome.tabs.query).toHaveBeenCalledWith({ active: true, currentWindow: true});
+    expect(tab).toEqual(mockTab);
+  });
+  
 });

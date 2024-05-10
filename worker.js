@@ -8,7 +8,7 @@ function sum(a, b) {
     return a + b;
 }
 
-module.exports = { worker, sum, getTabLevel, containsTab};
+module.exports = { worker, sum, getTabLevel, containsTab, getCurrentTab};
 
 
 
