@@ -142,6 +142,7 @@ describe('defaultButton', () => {
 
 });
 
+
 describe('bassBoost', () => {
   it('[BASS BOOST BUTTON] should send a message when clicked', async() => {
     const bassBoost = document.createElement('button');
@@ -153,5 +154,19 @@ describe('bassBoost', () => {
     bassBoost.click();
     await new Promise(resolve => setTimeout(resolve, 0));
     expect(chrome.runtime.sendMessage).toHaveBeenCalledWith({ type: 'testGet' });
+  });
+});
+
+describe('voiceBoost', () => {
+  it('[VOICE BOOST BUTTON] should send a message when clicked', async() => {
+    const voiceBoost = document.createElement('button');
+    voiceBoost.addEventListener('click', async () => {
+      console.log("[POPUP] Voice Boost clicked");
+      await chrome.runtime.sendMessage({ type: 'testSave' });
+    });
+
+    voiceBoost.click();
+    await new Promise(resolve => setTimeout(resolve, 0));
+    expect(chrome.runtime.sendMessage).toHaveBeenCalledWith({ type: 'testSave' });
   });
 });
