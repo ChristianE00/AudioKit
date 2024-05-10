@@ -8,7 +8,7 @@ function sum(a, b) {
     return a + b;
 }
 
-module.exports = { worker, sum, getTabLevel};
+module.exports = { worker, sum, getTabLevel, containsTab};
 
 
 
@@ -81,7 +81,7 @@ async function getTabLevel(tabId){
   let items = await chrome.storage.local.get('levels');
   let tabLevels = items.levels;
   // If level for current tab is not found, return 100
-  if (tabLevels == null){
+  if (tabLevels == null || tabLevels[tabId] < 0){
     return 100;
   }
   else{
