@@ -10,6 +10,14 @@ function sum(a, b) {
 
 module.exports = { worker, sum, getTabLevel, containsTab, getCurrentTab};
 
+// Clear previous session ids.
+chrome.runtime.onStartup.addListener(function() {
+  console.log("Browser opened CLEARING CACHE");
+  chrome.storage.local.clear();
+
+
+});
+
 
 
 const activeStreams = new Map();

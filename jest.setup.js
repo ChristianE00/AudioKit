@@ -4,6 +4,9 @@ global.chrome = {
       onMessage: {
         addListener: jest.fn(),
       },
+      onStartup : {
+        addListener: jest.fn()
+      },
       sendMessage: jest.fn(),
     },
     storage: {
