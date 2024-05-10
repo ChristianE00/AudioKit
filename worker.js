@@ -80,11 +80,15 @@ async function containsTab(tabId){
 async function getTabLevel(tabId){
   let items = await chrome.storage.local.get('levels');
   let tabLevels = items.levels;
+  
   // If level for current tab is not found, return 100
-  if (tabLevels == null || tabLevels[tabId] < 0){
+  if (!(await containsTab(tabId)) || tabLevels[tabId] < 0){
+    console.log("!!Level not found for tabId: ", tabId);
     return 100;
   }
   else{
+    
+    console.log("!!Level found for tabId: ", tabId);
     return tabLevels[tabId] * 100;
   }
 }

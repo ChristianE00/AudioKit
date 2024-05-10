@@ -2,13 +2,15 @@
   "devDependencies": {
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
-    "tailwindcss": "^3.4.3"
+    "tailwindcss": "^3.4.3",
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4"
   },
   "name": "equalizerextension",
   "version": "1.0.0",
   "main": "tailwind.config.js",
   "scripts": {
-    "build": "npx tailwindcss -i ./css/style.css -o ./css/output.css --watch",
+    "build": "webpack && npx tailwindcss -i ./css/style.css -o ./css/output.css --watch",
     "test": "jest"
   },
   "jest": {
