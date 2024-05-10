@@ -44,6 +44,27 @@
     <button class="flex-1 mx-1 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 js-audio-equalizer__preset" id="voiceBoost" data-equalizer-type="voice"> <i class="fa-solid fa-microphone px-2"></i> <span class="hand-written">Voice Boost</span></button>
     <button class="flex-1 mx-1 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 js-audio-equalizer__preset" id="bassBoost" data-equalizer-type="bass"> <i class="fa-solid fa-rocket px-2"></i> <span class="hand-written">Bass Boost</span></button>
 </div> 
+
+        <div class="py-6 px-10 slider w-full bg-gray-800 rounded items-center shadow-xl flex flex-col border-orange-800 border-2 my-6">
+            <div class="bg-orange-800 w-full">
+            <h1 class="text-white text-center text-xl ">Not in Production Yet.</hi>
+            </div>
+            <div class="slider w-full m-2">
+                <input type="range" id="bassVolumeSlider" min="0" max="200"
+                    class="appearance-none rounded-full bg-gray-400 w-full h-1 bg-black border-none outline-none">
+                <p class="text-sm font-semibold text-gray-400 text-black text-center">
+                    Bass Level: <span class="hand-written" id="bassRangeValue">100</span> %
+                </p>
+            </div>
+            <div class="slider w-full m-2">
+                <input type="range" id="midVolumeSlider" min="0" max="200"
+                    class="appearance-none rounded-full bg-gray-400 w-full h-1 bg-black border-none outline-none">
+                <p class="text-sm font-semibold text-gray-400 text-black text-center">
+                    Mid Level: <span class="hand-written" id="midRangeValue">100</span> %
+                </p>
+            </div>
+        </div> 
+  
       
     <!-- Suggestion Box -->
     <div class="w-full mb-1 mt-11" id="removeElement">
@@ -68,6 +89,8 @@
     </div>
 
 </body>
+
+
 
 <footer class="mt-auto mb-4">
     <p class=" text-center text-white"><span class="text-blue-300">Pay what you like</span> -- Made with <i class="fa-solid fa-heart text-red-600"></i> by <a href="https://github.com/ChristianE00" id="feedback" class="text-blue-600">Christian Ewing</a></p>

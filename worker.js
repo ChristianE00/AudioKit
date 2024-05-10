@@ -19,7 +19,6 @@ chrome.runtime.onStartup.addListener(function() {
 });
 
 
-
 const activeStreams = new Map();
 // Messages from the popup
 chrome.runtime.onMessage.addListener(async (msg) => {
@@ -139,7 +138,6 @@ async function updateTabVolume(tabId, volume){
       await saveTabLevel(tabIdS, volumeS);
     }
 }
-
 
 async function getCurrentTab() {
   let queryOptions = { active: true, currentWindow: true };

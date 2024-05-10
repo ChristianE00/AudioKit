@@ -9,6 +9,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     let voiceBoost = document.getElementById('voiceBoost');
     let bassBoost = document.getElementById('bassBoost'); 
     let defaultButton = document.getElementById("defaultButton");
+    let bassVolumeSlider = document.getElementById('bassVolumeSlider');
+    let midVolumeSlider = document.getElementById('midVolumeSlider');
+    let bassRangeValue = document.getElementById('bassRangeValue');
+    let midRangeValue = document.getElementById('midRangeValue');
 
     // Currently for testing purposes
     voiceBoost.addEventListener('click', async () => {
@@ -61,6 +65,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         type: 'adjust-level',
         level: volume,
       });
+    });
+  });
+
+  bassVolumeSlider.addEventListener('input', async (event) => {
+    bassRangeValue.innerText = event.target.value;
+    const volume = event.target.value / 100;
+    console.log("Slider MOVED value: ", volume);
+    
+    // Send the volume level to the service-worker
+    await chrome.runtime.sendMessage({
+      type: 'adjust-bass-level',
+      level: volume,
+    });
+  });
+
+  midVolumeSlider.addEventListener('input', async (event) => {
+    midRangeValue.innerText = event.target.value;
+    const volume = event.target.value / 100;
+    console.log("Slider MOVED value: ", volume);
+    
+    // Send the volume level to the service-worker
+    await chrome.runtime.sendMessage({
+      type: 'adjust-mid-level',
+      level: volume,
     });
   });
 
