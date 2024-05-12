@@ -12,9 +12,15 @@
     ],
     "action": {
       "default_popup": "home.html",
-      "default_icon": "icon.png"
+      "default_icon": "./assets/icons/icon.png"
     },
     "background": {
       "service_worker": "./dist/main.js"
-    }
+    },
+    "web_accessible_resources": [
+      {
+        "resources": ["./src/js/offscreen.js"],
+        "matches": ["<all_urls>"]
+      }
+    ]
   }

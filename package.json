@@ -10,12 +10,12 @@
   "version": "1.0.0",
   "main": "tailwind.config.js",
   "scripts": {
-    "build": "webpack && npx tailwindcss -i ./css/style.css -o ./css/output.css --watch",
+    "build": "webpack && npx tailwindcss -i ./src/css/style.css -o ./src/css/output.css --watch",
     "test": "jest"
   },
   "jest": {
     "setupFiles": [
-      "./jest.setup.js"
+      "./tests/jest.setup.js"
     ],
     "testEnvironment": "jsdom"
   },

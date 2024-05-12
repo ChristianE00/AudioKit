@@ -1,4 +1,4 @@
-const { worker, sum, getTabLevel, containsTab, getCurrentTab } = require('./worker');
+const { worker, sum, getTabLevel, containsTab, getCurrentTab } = require('../src/js/worker');
 
 // Example test
 test('adds 1 + 2 to equal 3', () => {
