@@ -143,7 +143,7 @@ async function lowshelf(tabId){
     });
     // Send the stream ID to the offscreen document to start recording
     chrome.runtime.sendMessage({ type: 'lowshelf-start', target: 'offscreen', data: streamId, tabId: tabId});
-    await saveTabLevel(tabIdS, 100);
+    await saveTabLevel(tabIdS, 1);
 
   }
 }
