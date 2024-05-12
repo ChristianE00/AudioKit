@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Currently for testing purposes
     bassBoost.addEventListener('click', async () => {
       console.log("[POPUP] Bass Boost clicked");
-      await chrome.runtime.sendMessage({ type: 'testGet'});
+      await chrome.runtime.sendMessage({ type: 'lowshelf-worker'});
     });
 
     // Clear storage for testing purposes

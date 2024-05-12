@@ -56,17 +56,13 @@ chrome.runtime.onMessage.addListener(async (msg) => {
 
     case "lowshelf-worker":
       console.log("[SERVICE-WORKER] Lowshelf message received");
-      await lowshelf(); 
-
+      var currTab = await getCurrentTab();
       await lowshelf(currTab.id);
       break;
   }
 });
 
-// Adjust bass frequencies with lowshelf filter
-async function lowshelf(tabId){
-  console.log("[SERVICE-WORKER] Lowshelf function called");
-}
+
 
 async function saveTabLevel(tabId, level){
   let items = await chrome.storage.local.get('levels');
@@ -130,24 +126,46 @@ async function createOffscreenDocument(){
     }
 }
 
+
+// Adjust bass frequencies with lowshelf filter
+async function lowshelf(tabId){
+  console.log("[SERVICE-WORKER] Lowshelf function called");
+  await createOffscreenDocument();
+  let tabIdS = tabId.toString();
+
+  if (await containsTab(tabIdS)){
+    chrome.runtime.sendMessage({ type: 'lowshelf', target: 'offscreen', tabId: tabId});
+  }
+  else{
+    console.log("[SERVICE-WORKER] tab not found in activeStreams W/ tabId: ", tabId);
+    const streamId = await chrome.tabCapture.getMediaStreamId({
+      targetTabId: tabId
+    });
+    // Send the stream ID to the offscreen document to start recording
+    chrome.runtime.sendMessage({ type: 'lowshelf-start', target: 'offscreen', data: streamId, tabId: tabId});
+    await saveTabLevel(tabIdS, 100);
+
+  }
+}
+
+
 async function updateTabVolume(tabId, volume){
   await createOffscreenDocument();
   let tabIdS = tabId.toString();
   let volumeS = volume.toString();
   // Tab already exits
   if(await containsTab(tabIdS)){
-    console.log("[WORKER] tab found in activeStreams W/ tabId: ", tabId);
+    console.log("[WORKER] tab found in activeStreams W/ tabId: ", tabId, " volume: ", volume);
     chrome.runtime.sendMessage({ type: 'adjust-level', target: 'offscreen', tabId: tabId, level: volume});
     await saveTabLevel(tabIdS, volumeS);
   }
   // Tab doesn't exist
   else{
-    console.log("[WORKER] tab not found in activeStreams W/ tabId: ", tabId);
+    console.log("[WORKER] tab not found in activeStreams W/ tabId: ", tabId, " volume: ", volume);
     // Get a MediaStream for the Active Tab
     const streamId = await chrome.tabCapture.getMediaStreamId({
       targetTabId: tabId
     });
-    
     // Send the stream ID to the offscreen document to start recording
     chrome.runtime.sendMessage({ type: 'start-recording', target: 'offscreen', data: streamId, tabId: tabId, level: volume});
     await saveTabLevel(tabIdS, volumeS);
