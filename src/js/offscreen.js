@@ -6,6 +6,7 @@ let audioContext;
 const gainNodes = new Map(); // Change the variable name to 'gainNodes'
 const biquadFilters = new Map(); // Add a new map for biquad filters
 const highShelfBiquadFilters = new Map(); // A map to store all highshelf biquad filter (voice enhancement)
+const sources = new Map(); // A map to store all the sources
 
 chrome.runtime.onMessage.addListener(async (msg) => {
   console.log("[OFFSCREEN] Message received from WORKER");
@@ -22,6 +23,8 @@ chrome.runtime.onMessage.addListener(async (msg) => {
       }
       else {
         console.log('[OFFSCREEN] Creating new gain node');
+        const media = await createMediaSourceNode(msg.data);
+        /*
         const media = await navigator.mediaDevices.getUserMedia({
           audio: {
             mandatory: {
@@ -30,6 +33,7 @@ chrome.runtime.onMessage.addListener(async (msg) => {
             },
           },
         });
+        */
 
         // Continue to play the captured audio to the user
         const output = new AudioContext();
@@ -41,6 +45,8 @@ chrome.runtime.onMessage.addListener(async (msg) => {
         gainNode.connect(output.destination);
         // Save the gain node for future changes
         gainNodes.set(msg.tabId, gainNode);
+        // Save the source for default changes
+        sources.set(msg.tabId, source);
       }
   } 
 
@@ -68,14 +74,7 @@ chrome.runtime.onMessage.addListener(async (msg) => {
         console.log('[OFFSCREEN] Creating new gain node in lowshelf-start');
 
         // creating a new gainNode
-        const media = await navigator.mediaDevices.getUserMedia({
-          audio: {
-            mandatory: {
-              chromeMediaSource: "tab",
-              chromeMediaSourceId: msg.data,
-            },
-          },
-        });
+        const media = await createMediaSourceNode(msg.data);
 
         // Continue to play the captured audio to the user
         const output = new AudioContext();
@@ -99,6 +98,8 @@ chrome.runtime.onMessage.addListener(async (msg) => {
         // Save the gain node & biquadFilter for future changes
         gainNodes.set(msg.tabId, gainNode);
         biquadFilters.set(msg.tabId, biquadFilter);
+        // Save the source for default changes
+        sources.set(msg.tabId, source);
 
       }
     
@@ -125,16 +126,24 @@ chrome.runtime.onMessage.addListener(async (msg) => {
       if (gainNodes.has(msg.tabId) && highShelfBiquadFilters.has(msg.tabId)){
         console.log('[OFFSCREEN] ERROR found gain node in highshelf-start ');
       }    
+      else if(highShelfBiquadFilters.has(msg.tabId)){
+        console.log('[OFFSCREEN-ERROR] found gain node in highshelf-start ');
+      }
       else{
       
         console.log('[OFFSCREEN] Creating new gain node in lowshelf-start');
         console.log('[OFFSCREEN-highshelf] highshelf entered');
-        // Create a biquad filter for equalization
-        const eq = output.createBiquadFilter();
-        eq.type = "peaking";
-        eq.frequency.value = 3000; // Center frequency of 3000 Hz
-        eq.Q.value = 1; // Quality factor, determines the bandwidth of the frequencies affected
-        eq.gain.value = 6; // Boost the cener frequency by 6 dB
+
+        // Create a new source
+        const media = await createMediaSourceNode(msg.data); 
+        
+        // Continue to play the captured audio to the user
+        const output = new AudioContext();
+        const source = output.createMediaStreamSource(media);
+
+        // Create gainNode
+        const gainNode = output.createGain();
+        //gainNode.gain.value = 0;
 
         // Create a dyncamic compressor for compression
         const compressor = output.createDynamicsCompressor();
@@ -145,13 +154,28 @@ chrome.runtime.onMessage.addListener(async (msg) => {
         compressor.release.value = 0.25; // The amout of time, in seconds, required to increase the gain by 10 dB
 
         // Connect nodes
-        source.connect(eq);
+        source.connect(gainNode);
+        gainNode.connect(eq);
+        eq.connect(compressor);
+        compressor.connect(output.destination);
 
-       // highShelfBiquadFilters
+        // Save the gain node & biquadFilter for future changes
+        gainNodes.set(msg.tabId, gainNode);
+        highShelfBiquadFilters.set(msg.tabId, eq);
+        // Save the source for default changes
+        sources.set(msg.tabId, source);
+
       }
     }
     if (msg.type === 'highshelf'){
         console.log('[OFFSCREEN-highshelf] highshelf entered');
+        /*
+      console.log('[OFFSCREEN-lowshelf] Found gain node');
+        const biquadFilter = biquadFilters.get(msg.tabId);
+        biquadFilter.type = "lowshelf";
+        biquadFilter.frequency.value = 200;
+        biquadFilter.gain.value = 6;
+        */
 
         if(gainNodes.has(msg.tabId) && highShelfBiquadFilters.has(msg.tabId)){
             // Create a biquad filter for equalization
@@ -171,7 +195,48 @@ chrome.runtime.onMessage.addListener(async (msg) => {
             // Don't need to connect eq, already connected
 
         }
+    }
+    if (msg.type === 'default'){
+      console.log('OFFSCREEN] default entered');
+      if(sources.has(msg.tabId)){
+        console.log('[OFFSCREEN] Found gain node');
+        const source = sources.get(msg.tabId);
+        // Remove all filters
+        if (gainNodes.has(msg.tabId)){
+          const gainNode = gainNodes.get(msg.tabId);
+          gainNode.disconnect();
+          gainNodes.delete(msg.tabId);
+        }
+        if(biquadFilters.has(msg.tabId)){
+          const biquadFilter = biquadFilters.get(msg.tabId);
+          biquadFilter.disconnect();
+          biquadFilters.delete(msg.tabId);
+        }
+        if(highShelfBiquadFilters.has(msg.tabId)){
+          const eq = highShelfBiquadFilters.get(msg.tabId);
+          eq.disconnect();
+          highShelfBiquadFilters.delete(msg.tabId);
+        }
+        source.disconnect();
+        sources.delete(msg.tabId); 
+      }
 
     }
 
 });
+
+
+async function createMediaSourceNode(streamId){
+
+  const media = await navigator.mediaDevices.getUserMedia({
+            audio: {
+              mandatory: {
+                chromeMediaSource: "tab",
+                chromeMediaSourceId: streamId,
+              },
+            },
+          });
+
+  return media;
+
+}
