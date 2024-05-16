@@ -1,7 +1,11 @@
+// TODO: 5/15/24
+// Get Audio-Enhancement inplemented
+
 console.log("Offscreen is running");
 let audioContext;
 const gainNodes = new Map(); // Change the variable name to 'gainNodes'
 const biquadFilters = new Map(); // Add a new map for biquad filters
+const highShelfBiquadFilters = new Map(); // A map to store all highshelf biquad filter (voice enhancement)
 
 chrome.runtime.onMessage.addListener(async (msg) => {
   console.log("[OFFSCREEN] Message received from WORKER");
@@ -52,6 +56,7 @@ chrome.runtime.onMessage.addListener(async (msg) => {
       }
     }
 
+    // NOTE: This isn't checking for the case of (gainNode) && !(biquadFilter)
     if (msg.type === 'lowshelf-start'){
       if (gainNodes.has(msg.tabId) && biquadFilters.has(msg.tabId)){
         console.log('[OFFSCREEN] ERROR found gain node in lowshelf-start ');
@@ -110,6 +115,60 @@ chrome.runtime.onMessage.addListener(async (msg) => {
       else{
         console.log('[OFFSCREEN] lowshelf entered');
       }
+    }
+
+    if (msg.type === 'highshelf-start'){
+
+      if (gainNodes.has(msg.tabId) && highShelfBiquadFilters.has(msg.tabId)){
+        console.log('[OFFSCREEN] ERROR found gain node in highshelf-start ');
+      }    
+      else{
+      
+        console.log('[OFFSCREEN] Creating new gain node in lowshelf-start');
+        console.log('[OFFSCREEN-highshelf] highshelf entered');
+        // Create a biquad filter for equalization
+        const eq = output.createBiquadFilter();
+        eq.type = "peaking";
+        eq.frequency.value = 3000; // Center frequency of 3000 Hz
+        eq.Q.value = 1; // Quality factor, determines the bandwidth of the frequencies affected
+        eq.gain.value = 6; // Boost the cener frequency by 6 dB
+
+        // Create a dyncamic compressor for compression
+        const compressor = output.createDynamicsCompressor();
+        compressor.threshold.value = -50; // dB level above which compressoin will start taking place
+        compressor.knee.value = 40; // Value representing the range above the threshold where the curve smoothly transitions to the 'ratio' portion
+        compressor.ratio.value = 12; // Amout of change (dB) need in the input for a 1 dB change in the output
+        compressor.attack.value = 0; // The ammout of time, in seconds, required to reduce the gain by 10 dB
+        compressor.release.value = 0.25; // The amout of time, in seconds, required to increase the gain by 10 dB
+
+        // Connect nodes
+        source.connect(eq);
+
+       // highShelfBiquadFilters
+      }
+    }
+    if (msg.type === 'highshelf'){
+        console.log('[OFFSCREEN-highshelf] highshelf entered');
+
+        if(gainNodes.has(msg.tabId) && highShelfBiquadFilters.has(msg.tabId)){
+            // Create a biquad filter for equalization
+            const eq = highShelfBiquadFilters.get(msg.tabId);
+            eq.type = "peaking";
+            eq.frequency.value = 3000; // Center frequency of 3000 Hz
+            eq.Q.value = 1; // Quality factor, determines the bandwidth of the frequencies affected
+            eq.gain.value = 6; // Boost the cener frequency by 6 dB
+
+            // Create a dyncamic compressor for compression
+            const compressor = output.createDynamicsCompressor();
+            compressor.threshold.value = -50; // dB level above which compressoin will start taking place
+            compressor.knee.value = 40; // Value representing the range above the threshold where the curve smoothly transitions to the 'ratio' portion
+            compressor.ratio.value = 12; // Amout of change (dB) need in the input for a 1 dB change in the output
+            compressor.attack.value = 0; // The ammout of time, in seconds, required to reduce the gain by 10 dB
+            compressor.release.value = 0.25; // The amout of time, in seconds, required to increase the gain by 10 dB
+            // Don't need to connect eq, already connected
+
+        }
+
     }
 
 });

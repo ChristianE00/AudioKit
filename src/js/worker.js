@@ -1,3 +1,8 @@
+// TODO: 5/15/24
+// Get Audio-Enhancement inplemented
+
+
+
 function worker(a, b) {
 
     return a + b;
@@ -31,7 +36,7 @@ chrome.runtime.onMessage.addListener(async (msg) => {
       console.log("[SERVICE-WORKER] Popup loaded message received sending level: ", level);
       chrome.runtime.sendMessage({ type: 'popup-level', level: level});
       break;
-    case "adjust-level":
+  case "adjust-level":
       console.log("[SERVICE-WORKER] Adjust level message received");
       var currTab = await getCurrentTab();
       await updateTabVolume(currTab.id, msg.level);
