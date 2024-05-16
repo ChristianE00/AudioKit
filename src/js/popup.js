@@ -9,10 +9,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     let voiceBoost = document.getElementById('voiceBoost');
     let bassBoost = document.getElementById('bassBoost'); 
     let defaultButton = document.getElementById("defaultButton");
+    // NOTE: DEPRICATED
+    /*
     let bassVolumeSlider = document.getElementById('bassVolumeSlider');
     let midVolumeSlider = document.getElementById('midVolumeSlider');
     let bassRangeValue = document.getElementById('bassRangeValue');
     let midRangeValue = document.getElementById('midRangeValue');
+    */
 
     // Currently for testing purposes
     voiceBoost.addEventListener('click', async () => {
@@ -68,6 +71,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
+// NOTE: DEPRICATED
+  /*
   bassVolumeSlider.addEventListener('input', async (event) => {
     bassRangeValue.innerText = event.target.value;
     const volume = event.target.value / 100;
@@ -91,6 +96,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       level: volume,
     });
   });
+  */
 
   async function updateVolume(level) {
    await chrome.runtime.sendMessage({ type: "adjust-level", level: level });

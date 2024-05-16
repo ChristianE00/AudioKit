@@ -61,6 +61,9 @@ chrome.runtime.onMessage.addListener(async (msg) => {
       if (gainNodes.has(msg.tabId) && biquadFilters.has(msg.tabId)){
         console.log('[OFFSCREEN] ERROR found gain node in lowshelf-start ');
       }    
+      else if(bigquadFilters.had(msg.tabId)){
+        console.log('[OFFSCREEN-ERROR] Found biquad filter in lowshelf-start');
+      }
       else{
         console.log('[OFFSCREEN] Creating new gain node in lowshelf-start');
 
