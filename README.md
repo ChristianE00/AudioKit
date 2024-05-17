@@ -1,23 +1,47 @@
+# AudioKit
 
+A lightweight, open-source web browser extension for adjusting volume and equalizing sound.
 
-# Build steps:
+### Prerequisites:
 
-1. Build tailwindcss
+Ensure you have [Node.js](https://nodejs.org/en) and npm installed on your system.
 
-```bash
+### Installation:
+
+First, install the necessary dependencies:
+
+```sh
+npm install
+```
+
+### Building the Project:
+
+To build the project, use the following command:
+
+```sh
 npm run build
 ```
 
+This command runs Webpack and Tailwind CSS to compile styles from `./src/css/style.css` to `./src/css/output.css`.
 
-# Troubleshooting
+### Testing the Project:
 
-- All html and css files should be in the /src directory for tailwindcss to properly build the css file.
+To run the tests, use the following command:
 
+```sh
+npm test
+```
 
-# TODO
+This command executes Jest, which is configured to use the `jsdom` environment for testing.
 
-- Voice Boost
-- Bass Boost
-- 'CLICK ME' redirect link
-- Move lambda expressions to functions
-- Audio level not working for embedded videos in Patreon 
+## Troubleshooting:
+
+- All HTML and CSS files should be in the `/src` directory for Tailwind CSS to properly build the CSS file.
+
+## TODO:
+
+- [ ] Voice Boost
+- [ ] Bass Boost
+- [ ] 'CLICK ME' redirect link
+- [ ] Move lambda expressions to functions
+- [ ] Audio level not working for embedded videos on Patreon
