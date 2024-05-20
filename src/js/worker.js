@@ -80,20 +80,21 @@ chrome.runtime.onMessage.addListener(async (msg) => {
 
 async function reset(tabId){
     if(await containsTab(tabId)){
-      chrome.runtime.sendMessage({ type: 'highshelf-start', target: 'offscreen', tabId: tabId});
-      await removeTab(tabId);
+      chrome.runtime.sendMessage({ type: 'default', target: 'offscreen', tabId: tabId});
+        await saveTabLevel(tabId, 1);
+        chrome.runtime.sendMessage({ type: 'popup-level', level: 100});
     }
     
 
 }
 
 async function removeTab(tabId){
-  let items = await chrome.storage.local.get('levels');
-  if(items.levels != null && items.levels[tabId] != null){
-    delete items.levels[tabId];
-    await chrome.storage.local.set({levels: items.levels});
+    let items = await chrome.storage.local.get('levels');
+    if(items.levels != null && items.levels[tabId] != null){
+        delete items.levels[tabId];
+        await chrome.storage.local.set({levels: items.levels});
 
-  }
+    }
 
 }
 

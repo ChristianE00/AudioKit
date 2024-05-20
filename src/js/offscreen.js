@@ -24,16 +24,6 @@ chrome.runtime.onMessage.addListener(async (msg) => {
       else {
         console.log('[OFFSCREEN] Creating new gain node');
         const media = await createMediaSourceNode(msg.data);
-        /*
-        const media = await navigator.mediaDevices.getUserMedia({
-          audio: {
-            mandatory: {
-              chromeMediaSource: "tab",
-              chromeMediaSourceId: msg.data,
-            },
-          },
-        });
-        */
 
         // Continue to play the captured audio to the user
         const output = new AudioContext();
@@ -197,32 +187,29 @@ chrome.runtime.onMessage.addListener(async (msg) => {
 
         }
     }
-    if (msg.type === 'default'){
-      console.log('OFFSCREEN] default entered');
-      if(sources.has(msg.tabId)){
-        console.log('[OFFSCREEN] Found gain node');
-        const source = sources.get(msg.tabId);
-        // Remove all filters
-        if (gainNodes.has(msg.tabId)){
-          const gainNode = gainNodes.get(msg.tabId);
-          gainNode.disconnect();
-          gainNodes.delete(msg.tabId);
-        }
-        if(biquadFilters.has(msg.tabId)){
-          const biquadFilter = biquadFilters.get(msg.tabId);
-          biquadFilter.disconnect();
-          biquadFilters.delete(msg.tabId);
-        }
-        if(highShelfBiquadFilters.has(msg.tabId)){
-          const eq = highShelfBiquadFilters.get(msg.tabId);
-          eq.disconnect();
-          highShelfBiquadFilters.delete(msg.tabId);
-        }
-        source.disconnect();
-        sources.delete(msg.tabId); 
-      }
-
+  if (msg.type === 'default'){
+  console.log('OFFSCREEN] default entered');
+  if(sources.has(msg.tabId)){
+    console.log('[OFFSCREEN] Found gain node');
+    const source = sources.get(msg.tabId);
+    // Remove all filters
+    if (gainNodes.has(msg.tabId)){
+      const gainNode = gainNodes.get(msg.tabId);
+      gainNode.gain.value = 1.0;
     }
+    if(biquadFilters.has(msg.tabId)){
+      const biquadFilter = biquadFilters.get(msg.tabId);
+      biquadFilter.disconnect();
+      biquadFilters.delete(msg.tabId);
+    }
+    if(highShelfBiquadFilters.has(msg.tabId)){
+      const eq = highShelfBiquadFilters.get(msg.tabId);
+      eq.disconnect();
+      highShelfBiquadFilters.delete(msg.tabId);
+    }
+
+  }
+}
 
 });
 
