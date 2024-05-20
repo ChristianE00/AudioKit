@@ -64,10 +64,38 @@ chrome.runtime.onMessage.addListener(async (msg) => {
       var currTab = await getCurrentTab();
       await lowshelf(currTab.id);
       break;
+
+    case "highshelf-worker":
+      console.log("[SERVICE-WORKER] Highshelf message received");
+      var currTab = await getCurrentTab();
+      await highshelf(currTab.id);
+      break;
+    case "default-worker":
+      console.log("[SERVICE-WORKER] Default message received");
+      var currTab = await getCurrentTab();
+      await reset(currTab.id);
+      break;
   }
 });
 
+async function reset(tabId){
+    if(await containsTab(tabId)){
+      chrome.runtime.sendMessage({ type: 'highshelf-start', target: 'offscreen', tabId: tabId});
+      await removeTab(tabId);
+    }
+    
 
+}
+
+async function removeTab(tabId){
+  let items = await chrome.storage.local.get('levels');
+  if(items.levels != null && items.levels[tabId] != null){
+    delete items.levels[tabId];
+    await chrome.storage.local.set({levels: items.levels});
+
+  }
+
+}
 
 async function saveTabLevel(tabId, level){
   let items = await chrome.storage.local.get('levels');
@@ -151,6 +179,29 @@ async function lowshelf(tabId){
     await saveTabLevel(tabIdS, 1);
 
   }
+}
+
+// Adjust frequencies for highshelf filter
+async function highshelf(tabId){
+  console.log("[SERVICE-WORKER] Highshelf function called");
+  await createOffscreenDocument();
+  let tabIdS = tabId.toString();
+  
+  if (await containsTab(tabIdS)){
+    chrome.runtime.sendMessage({ type: 'highshelf', target: 'offscreen', tabId: tabId});
+  }
+  else {
+    console.log("[SERVICE-WORKER] tab not found in activeStreams W/ tabId: ", tabId);
+    const streamId = await chrome.tabCapture.getMediaStreamId({
+      targetTabId: tabId
+    });
+    // Send the stream ID to the offscreen document to start recording
+    chrome.runtime.sendMessage({ type: 'highshelf-start', target: 'offscreen', data: streamId, tabId: tabId});
+    await saveTabLevel(tabIdS, 1);
+  }
+
+
+
 }
 
 

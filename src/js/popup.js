@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Currently for testing purposes
     voiceBoost.addEventListener('click', async () => {
       console.log("[POPUP] Voice Boost clicked");
-      await chrome.runtime.sendMessage({ type: 'testSave'});
+      await chrome.runtime.sendMessage({ type: 'highshelf-worker'});
     });
 
     // Currently for testing purposes
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Clear storage for testing purposes
     defaultButton.addEventListener('click', async () => {
       console.log("[POPUP] Default Button clicked");
-      await chrome.runtime.sendMessage({ type: 'clear-storage'});
+      await chrome.runtime.sendMessage({ type: 'default-worker'});
     });
 
     // Set volume slider and range value to the current volume level

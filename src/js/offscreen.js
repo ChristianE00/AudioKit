@@ -144,6 +144,7 @@ chrome.runtime.onMessage.addListener(async (msg) => {
         // Create gainNode
         const gainNode = output.createGain();
         //gainNode.gain.value = 0;
+        const eq = output.createBiquadFilter();
 
         // Create a dyncamic compressor for compression
         const compressor = output.createDynamicsCompressor();
