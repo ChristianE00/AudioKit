@@ -1,6 +1,8 @@
 
+let hideSuggestions = false;
 document.addEventListener('DOMContentLoaded', async () => {
     console.log("popup loaded");
+    console.log("hideSuggestions: ", hideSuggestions);
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
     const tabId = tabs[0].id;
     const url = tabs[0].url;
@@ -10,6 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let bassBoost = document.getElementById('bassBoost'); 
     let defaultButton = document.getElementById("defaultButton");
     let suggestionCloseButton = document.getElementById("signalRemoveElement");
+    
     // NOTE: DEPRICATED
     /*
     let bassVolumeSlider = document.getElementById('bassVolumeSlider');
@@ -18,9 +21,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     let midRangeValue = document.getElementById('midRangeValue');
     */
 
+    chrome.storage.local.get(['hideSuggestions'], function(result) {
+      hideSuggestions = result.hideSuggestions || false;
+      console.log("hideSuggestions: ", hideSuggestions);
+
+      if (hideSuggestions) {
+        document.getElementById('suggestionBox').style.display = 'none';
+      }
+
+    });
+
+    
+    
+
     suggestionCloseButton.addEventListener('click', function() {
       // document.getElementById('suggestionBoxWrapper').style.display = 'none';
       document.getElementById('suggestionBox').style.display = 'none';
+      hideSuggestions = true;
+
+      // save volue to chrome.storage.local
+      chrome.storage.local.set({ hideSuggestions: hideSuggestions }, function() {
+        console.log('Value is set to ' + hideSuggestions);
+      });
       
     });
 

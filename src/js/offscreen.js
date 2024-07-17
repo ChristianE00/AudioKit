@@ -8,6 +8,7 @@ const biquadFilters = new Map(); // Add a new map for biquad filters
 const highShelfBiquadFilters = new Map(); // A map to store all highshelf biquad filter (voice enhancement)
 const sources = new Map(); // A map to store all the sources
 
+
 chrome.runtime.onMessage.addListener(async (msg) => {
   console.log("[OFFSCREEN] Message received from WORKER");
   if (msg.target !== 'offscreen' ) {
