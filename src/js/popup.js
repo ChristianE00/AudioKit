@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let voiceBoost = document.getElementById('voiceBoost');
     let bassBoost = document.getElementById('bassBoost'); 
     let defaultButton = document.getElementById("defaultButton");
+    let suggestionCloseButton = document.getElementById("signalRemoveElement");
     // NOTE: DEPRICATED
     /*
     let bassVolumeSlider = document.getElementById('bassVolumeSlider');
@@ -16,6 +17,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     let bassRangeValue = document.getElementById('bassRangeValue');
     let midRangeValue = document.getElementById('midRangeValue');
     */
+
+    suggestionCloseButton.addEventListener('click', function() {
+      // document.getElementById('suggestionBoxWrapper').style.display = 'none';
+      document.getElementById('suggestionBox').style.display = 'none';
+      
+    });
 
     // Currently for testing purposes
     voiceBoost.addEventListener('click', async () => {

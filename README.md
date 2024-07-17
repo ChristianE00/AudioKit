@@ -45,3 +45,5 @@ This command executes Jest, which is configured to use the `jsdom` environment f
 - [ ] 'CLICK ME' redirect link
 - [ ] Move lambda expressions to functions
 - [ ] Audio level not working for embedded videos on Patreon
+- [ ] Audio booest level 600%
+- [ ] Have Suggestions box dissapear when the x is clicked.

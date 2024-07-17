@@ -30,7 +30,7 @@
    <!-- Volume Slider -->
    <div class="py-6 slider w-full bg-gray-800 rounded flex items-center shadow-xl">
     <div class="slider w-full m-2">
-        <input type="range" id="volumeSlider" min="0" max="200"
+        <input type="range" id="volumeSlider" min="0" max="600"
             class="appearance-none rounded-full bg-gray-400 w-full h-2 bg-black border-none outline-none">
         <p class="text-lg font-semibold text-gray-400 text-black text-center">
             Volume: <span class="hand-written" id="rangeValue">100</span> %
@@ -69,8 +69,9 @@
   
       
     <!-- Suggestion Box -->
-    <div class="w-full mb-1 mt-11" id="removeElement">
-        <div class="update mx-4 rounded-lg shadow-lg bg-gray-200 border-2 border-indigo-600 bg-opacity-70  ">
+    <!--<div class="w-full mb-1 mt-11" id="removeElement" style="display: none;">-->
+    <div class="w-full mb-1 mt-11" id="suggestionBoxWrapper"></div>
+        <div class="update mx-4 rounded-lg shadow-lg bg-gray-200 border-2 border-indigo-600 bg-opacity-70  " id="suggestionBox">
             <div class=" w-full flex flex-row-reverse ">
                 <div class=" justify-self-end mr-1">
                     <button class="text-white" id="signalRemoveElement">
