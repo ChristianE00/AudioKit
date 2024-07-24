@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     let bassBoost = document.getElementById('bassBoost'); 
     let defaultButton = document.getElementById("defaultButton");
     let suggestionCloseButton = document.getElementById("signalRemoveElement");
+    let currentTabTitle = document.getElementById("currentTabTitle");
+    let audibleEntry = document.getElementById("isAudible");
     
     // NOTE: DEPRICATED
     /*
@@ -70,7 +72,22 @@ document.addEventListener('DOMContentLoaded', async () => {
       switch (msg.type) {
         case "popup-level":
           console.log("[POPUP] Popup loaded message received level: ", msg.level);
-          const level = msg.level
+          const level = msg.level;
+          const title = msg.title;
+          const audible = msg.audible;
+          // currentTabTitle.innerText = title;
+          const titleTextNode = currentTabTitle.firstChild;
+          titleTextNode.textContent = `current tab: ${title} `;
+          if (audible == "True"){
+            audibleEntry.style.color = "green";
+            audibleEntry.innerText = "-- Audible";
+            console.log("Is Audible");
+          }
+          else {
+            audibleEntry.style.color = "red";
+            audibleEntry.innerText = "-- Not Audible";
+            console.log(" not audible");
+          }
           rangeValue.innerText = level;
           volumeSlider.value = level;
           break;

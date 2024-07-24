@@ -33,8 +33,12 @@ chrome.runtime.onMessage.addListener(async (msg) => {
       //await chrome.storage.local.clear();
       let t = await getCurrentTab();
       var level = await getTabLevel(t.id);
+      console.log("[SERVICE-WORKER] Get tab title message received");
+      var arr = await getCurrentTabTitleAndSound();
+			var title = arr[0];
+			var audible = arr[1];
       console.log("[SERVICE-WORKER] Popup loaded message received sending level: ", level);
-      chrome.runtime.sendMessage({ type: 'popup-level', level: level});
+      chrome.runtime.sendMessage({ type: 'popup-level', level: level, title: title, audible : audible });
       break;
   case "adjust-level":
 
@@ -53,6 +57,11 @@ chrome.runtime.onMessage.addListener(async (msg) => {
       console.log("[SERVICE-WORKER] Test get message received");
       var currTab = await getCurrentTab();
       await testGet(currTab.id);
+      break;
+
+    case "getTabTitle":
+
+
       break;
 
     case "clear-storage":
@@ -79,6 +88,8 @@ chrome.runtime.onMessage.addListener(async (msg) => {
   }
 });
 
+  
+
 async function reset(tabId){
     if(await containsTab(tabId)){
       chrome.runtime.sendMessage({ type: 'default', target: 'offscreen', tabId: tabId});
@@ -89,15 +100,22 @@ async function reset(tabId){
 
 }
 
-async function getCurrentTabTitle() {
+async function getCurrentTabTitleAndSound() {
   let queryOptions = { active: true, lastFocusedWindow: true };
   // Extract the first element in the array and store it in 'tab', discard the rest
   let [tab] = await chrome.tabs.query(queryOptions);
+  let title = "No active tab found.";
+	let audible = "False";
   if (tab) {
     console.log(` Title: ${tab.title}`);
+    title = tab.title;
+		if (tab.audible){
+			audible = "True";
+		}
   } else {
     console.log("No active tab found.");
   }
+  return [title, audible];
 }
 
 async function removeTab(tabId){
