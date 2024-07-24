@@ -48,13 +48,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       
     });
 
-    // Currently for testing purposes
     voiceBoost.addEventListener('click', async () => {
       console.log("[POPUP] Voice Boost clicked");
       await chrome.runtime.sendMessage({ type: 'highshelf-worker'});
     });
 
-    // Currently for testing purposes
     bassBoost.addEventListener('click', async () => {
       console.log("[POPUP] Bass Boost clicked");
       await chrome.runtime.sendMessage({ type: 'lowshelf-worker'});
@@ -68,16 +66,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Set volume slider and range value to the current volume level
      chrome.runtime.onMessage.addListener( (msg) => {
-      console.log("[POPUP] Message received from worker, type: ", msg.type);
       switch (msg.type) {
         case "popup-level":
-          console.log("[POPUP] Popup loaded message received level: ", msg.level);
           const level = msg.level;
           const title = msg.title;
           const audible = msg.audible;
-          // currentTabTitle.innerText = title;
           const titleTextNode = currentTabTitle.firstChild;
           titleTextNode.textContent = `current tab: ${title} `;
+
           if (audible == "True"){
             audibleEntry.style.color = "green";
             audibleEntry.innerText = "-- Audible";
@@ -117,6 +113,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
+  async function updateVolume(level) {
+   await chrome.runtime.sendMessage({ type: "adjust-level", level: level });
+  
+  }
+
 // NOTE: DEPRICATED
   /*
   bassVolumeSlider.addEventListener('input', async (event) => {
@@ -144,7 +145,4 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
   */
 
-  async function updateVolume(level) {
-   await chrome.runtime.sendMessage({ type: "adjust-level", level: level });
-  
-  }
+
