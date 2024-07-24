@@ -37,6 +37,7 @@ chrome.runtime.onMessage.addListener(async (msg) => {
       chrome.runtime.sendMessage({ type: 'popup-level', level: level});
       break;
   case "adjust-level":
+
       console.log("[SERVICE-WORKER] Adjust level message received");
       var currTab = await getCurrentTab();
       await updateTabVolume(currTab.id, msg.level);
@@ -86,6 +87,17 @@ async function reset(tabId){
     }
     
 
+}
+
+async function getCurrentTabTitle() {
+  let queryOptions = { active: true, lastFocusedWindow: true };
+  // Extract the first element in the array and store it in 'tab', discard the rest
+  let [tab] = await chrome.tabs.query(queryOptions);
+  if (tab) {
+    console.log(` Title: ${tab.title}`);
+  } else {
+    console.log("No active tab found.");
+  }
 }
 
 async function removeTab(tabId){
@@ -227,6 +239,9 @@ async function updateTabVolume(tabId, volume){
     chrome.runtime.sendMessage({ type: 'start-recording', target: 'offscreen', data: streamId, tabId: tabId, level: volume});
     await saveTabLevel(tabIdS, volumeS);
   }
+  console.log("BEFORE");
+  await getCurrentTabTitle();
+  console.log("AFTER");
 }
 
 async function getCurrentTab() {
