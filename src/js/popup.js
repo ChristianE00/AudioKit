@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           muted = msg.muted;
           //const titleTextNode = currentTabTitle.firstChild;
          // titleTextNode.textContent = `current tab: ${title} `;
-         currentTabTitle.innerText = `current tab: ${title} `;
+         currentTabTitle.innerText = `Tab: ${title} `;
 
 
           // ! Move into a function
