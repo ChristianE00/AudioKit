@@ -24,6 +24,8 @@ const activeStreams = new Map();
 // Messages from the popup
 chrome.runtime.onMessage.addListener(async (msg) => {
 //  console.log("Message received from popup");
+  let currTab;
+  let muted;
   switch (msg.type) {
     case "popup-loaded":
       //await chrome.storage.local.clear();
@@ -33,11 +35,19 @@ chrome.runtime.onMessage.addListener(async (msg) => {
       let arr = await getCurrentTabTitleAndSound();
 			let title = arr[0];
 			let audible = arr[1];
+      muted = arr[2];
       //console.log("[SERVICE-WORKER] Popup loaded message received sending level: ", level);
-      chrome.runtime.sendMessage({ type: 'popup-level', level: level, title: title, audible : audible });
+      chrome.runtime.sendMessage({ type: 'popup-level', level: level, title: title, audible : audible, muted : muted });
+      break;
+  case "toggle-mute":
+      console.log("[SERVICE-WORKER] Toggle mute message received");
+      //let tabId = msg.tabId;
+      //muted = await getTabMuteStatus(tabId);
+      //muted = await getTabMuteStatus();
+      muted = await toggleMuteState();
+      chrome.runtime.sendMessage({ type: 'tab-muted', muted: muted });
       break;
   case "adjust-level":
-
       //console.log("[SERVICE-WORKER] Adjust level message received");
       currTab = await getCurrentTab();
       await updateTabVolume(currTab.id, msg.level);
@@ -45,13 +55,13 @@ chrome.runtime.onMessage.addListener(async (msg) => {
 
     case "testSave":
       //console.log("[SERVICE-WORKER] Test save message received");
-      let currTab = await getCurrentTab();
+      currTab = await getCurrentTab();
       await testSave(currTab.id);
       break;
 
     case "testGet":
       //console.log("[SERVICE-WORKER] Test get message received");
-      let currTab = await getCurrentTab();
+      currTab = await getCurrentTab();
       await testGet(currTab.id);
       break;
 
@@ -62,18 +72,18 @@ chrome.runtime.onMessage.addListener(async (msg) => {
 
     case "lowshelf-worker":
       //console.log("[SERVICE-WORKER] Lowshelf message received");
-      let currTab = await getCurrentTab();
+      currTab = await getCurrentTab();
       await lowshelf(currTab.id);
       break;
 
     case "highshelf-worker":
       //console.log("[SERVICE-WORKER] Highshelf message received");
-      let currTab = await getCurrentTab();
+      currTab = await getCurrentTab();
       await highshelf(currTab.id);
       break;
     case "default-worker":
       //console.log("[SERVICE-WORKER] Default message received");
-      let currTab = await getCurrentTab();
+      currTab = await getCurrentTab();
       await reset(currTab.id);
       break;
   }
@@ -95,6 +105,21 @@ async function reset(tabId){
 
 }
 
+async function toggleMuteState() {
+  let queryOptions = { active: true, lastFocusedWindow: true };
+  let [tab] = await chrome.tabs.query(queryOptions);
+  let mute = !tab.mutedInfo.muted;
+  await chrome.tabs.update(tab.id, { muted: mute });
+  return mute.toString();
+}
+
+//async function getTabMuteStatus(tabId) {
+async function getTabMuteStatus() {
+  let queryOptions = { active: true, lastFocusedWindow: true };
+  let [tab] = await chrome.tabs.query(queryOptions);
+  let muted = (tab.mutedInfo.muted).toString();
+    return muted;
+}
 
 /**
  *
@@ -107,16 +132,22 @@ async function getCurrentTabTitleAndSound() {
   let [tab] = await chrome.tabs.query(queryOptions);
   let title = "No active tab found.";
 	let audible = "False";
+  let muted = false;
+  // Get tab title
   if (tab) {
     console.log(` Title: ${tab.title}`);
     title = tab.title;
+    // Get if the tab currently has audio playing
 		if (tab.audible){
 			audible = "True";
 		}
+    // Get if the tab is currently muted
+    muted = tab.mutedInfo.muted;
+    
   } else {
     console.log("No active tab found.");
   }
-  return [title, audible];
+    return [title, audible, muted.toString()];
 }
 
 

@@ -633,6 +633,10 @@ video {
   flex: 1 1 0%;
 }
 
+.flex-none {
+  flex: none;
+}
+
 .appearance-none {
   -webkit-appearance: none;
      -moz-appearance: none;

@@ -15,8 +15,24 @@
 <body class="bg-gray-800 flex flex-col w-96 min-h-screen ">
     <!-- Guide Sentence -->
     <h1 class="block pl-2 text-xl font-bold text-gray-800 text-white">Audio Kit</h1>
+
+    <div class="flex py-2">
+        <div class="flex-none px-2">
+            <button class="text-white" id="signalToggleMuteButton">
+                <i class="fa-solid fa-play" id="tabMuteIcon"></i>
+            </button>
+        </div>
+        <div class="flex-none px-2">
+            <p class="text-white" id="tabMuted">Muted: </p>
+        </div>
+        
+        <div class="flex-none px-2">
+            <p class="text-white" id="currentTabTitle">Current Tab: <span class="text-blue-300" id="isAudible">No Audio Playing</span></p>
+        </div>
+        
+    </div>
+
     <div class="w-full mb-3 mt-2">
-    <p class="text-white" id="currentTabTitle">Current Tab: <span class="text-blue-300" id="isAudible">No Audio Playing</span></p>
     <div class="mx-4 rounded-lg shadow-lg bg-indigo-300 border-2 border-indigo-600 bg-opacity-70">
         <div class="text-center">
             <h4 class="text-lg text-indigo-900 "><b>Stay tuned for more updates</b></h4>

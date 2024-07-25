@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     let suggestionCloseButton = document.getElementById("signalRemoveElement");
     let currentTabTitle = document.getElementById("currentTabTitle");
     let audibleEntry = document.getElementById("isAudible");
+    let tabMuteIcon = document.getElementById("tabMuteIcon");
+    let tabMuted = document.getElementById("tabMuted");
+    let tabMutedToggleButton = document.getElementById("signalToggleMuteButton"); 
     
     // NOTE: DEPRICATED
     /*
@@ -30,16 +33,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (hideSuggestions) {
         document.getElementById('suggestionBox').style.display = 'none';
       }
+      
 
     });
 
-    
+
     
 
     suggestionCloseButton.addEventListener('click', function() {
       // document.getElementById('suggestionBoxWrapper').style.display = 'none';
-      document.getElementById('suggestionBox').style.display = 'none';
       hideSuggestions = true;
+     
 
       // save volue to chrome.storage.local
       chrome.storage.local.set({ hideSuggestions: hideSuggestions }, function() {
@@ -65,19 +69,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // Set volume slider and range value to the current volume level
+    
      chrome.runtime.onMessage.addListener( (msg) => {
+      let muted = false;
       switch (msg.type) {
         case "popup-level":
           const level = msg.level;
           const title = msg.title;
           const audible = msg.audible;
+          muted = msg.muted;
           const titleTextNode = currentTabTitle.firstChild;
           titleTextNode.textContent = `current tab: ${title} `;
+
+          // ! Move into a function
+          updateTabMuteStatus(muted);
 
           if (audible == "True"){
             audibleEntry.style.color = "green";
             audibleEntry.innerText = "-- Audible";
             console.log("Is Audible");
+            
           }
           else {
             audibleEntry.style.color = "red";
@@ -87,7 +98,33 @@ document.addEventListener('DOMContentLoaded', async () => {
           rangeValue.innerText = level;
           volumeSlider.value = level;
           break;
+
+        case "tab-muted":
+          muted = msg.muted;
+          updateTabMuteStatus(muted);
       }
+    });
+
+    function updateTabMuteStatus(muted) {
+      // tabMutedToggleButton.innerText = `Tab muted: ${muted} `;
+      console.log("updateTabMuteStatus: ", muted);
+      tabMuted.innerText = `Tab muted: ${muted} `;
+      if (muted == "true"){
+        console.log("muted");
+        tabMuteIcon.className = 'fa-solid fa-volume-xmark';
+        tabMuted.style.color = "green";
+      }
+      else {
+        console.log("not muted");
+        tabMuteIcon.className = 'fa-solid fa-volume-high';
+        tabMuted.style.color = "red"; 
+      }
+    }
+
+    tabMutedToggleButton.addEventListener('click', async () => {
+      console.log("tabMutedToggleButton clicked");
+      await chrome.runtime.sendMessage({ type: 'toggle-mute' });
+
     });
 
     // Let the service-worker know that the popup has loaded
