@@ -93,6 +93,7 @@ async function reset(tabId){
 
 }
 
+
 async function toggleMuteState() {
   let queryOptions = { active: true, lastFocusedWindow: true };
   let [tab] = await chrome.tabs.query(queryOptions);
@@ -101,6 +102,7 @@ async function toggleMuteState() {
   return mute.toString();
 }
 
+
 //async function getTabMuteStatus(tabId) {
 async function getTabMuteStatus() {
   let queryOptions = { active: true, lastFocusedWindow: true };
@@ -108,6 +110,7 @@ async function getTabMuteStatus() {
   let muted = (tab.mutedInfo.muted).toString();
     return muted;
 }
+
 
 /**
  *
@@ -140,6 +143,50 @@ async function getCurrentTabTitleAndSound() {
 
 /**
  *
+ *
+ */
+async function getAllTabTitlesAndSounds() {
+  // ! fix
+  let queryOptions = { active: true, lastFocusedWindow: true };
+  let tabs = await chrome.tabs.query(queryOptions);
+  let tabTitle = [], tabAudio = [], tabMuted = [];
+  for (const tab of tabs) { 
+    if (tab) {
+      tabTitle.push(tab.title);
+      tabMuted.push((tab.mutedInfo.muted).toString())
+      if (tab.audible) {
+        tabAudio.push("true");
+      }
+      else {
+        tabAudio.push("false");
+      }
+    }
+  }
+  return [tabTitle, tabAudio, tabMuted];
+}
+
+
+/**
+ *
+ *
+ */
+async function getAllTabTitles() {
+  // ! fix
+  let queryOptions = { active: true, lastFocusedWindow: true };
+  let tabs = await chrome.tabs.query(queryOptions);
+  let titles = []; 
+  for (const tab of tabs) {
+    if (tab) {
+      titles.push(tab.title);
+    }
+
+  }
+  return titles
+}
+
+
+/**
+ *
  * @param {string}
  *
  */
@@ -148,9 +195,7 @@ async function removeTab(tabId){
     if(items.levels != null && items.levels[tabId] != null){
         delete items.levels[tabId];
         await chrome.storage.local.set({levels: items.levels});
-
     }
-
 }
 
 
