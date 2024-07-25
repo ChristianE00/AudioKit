@@ -1,7 +1,4 @@
-// TODO: 5/15/24
-// Get Audio-Enhancement inplemented
 
-console.log("Offscreen is running");
 let audioContext;
 const gainNodes = new Map(); // Change the variable name to 'gainNodes'
 const biquadFilters = new Map(); // Add a new map for biquad filters
