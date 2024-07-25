@@ -10,27 +10,22 @@ const sources = new Map(); // A map to store all the sources
 
 
 chrome.runtime.onMessage.addListener(async (msg) => {
-  console.log("[OFFSCREEN] Message received from WORKER");
   if (msg.target !== 'offscreen' ) {
     console.log("[OFFSCREEN] Message is not from offscreen");
     return;
   }
   
   if (msg.type === 'start-recording'){
-    console.log('[OFFSCREEN] Received start-recording message');
-
-      if (gainNodes.has(msg.tabId)){
+      if (gainNodes.has(msg.tabId)) {
         console.log('[OFFSCREEN] ERROR found gain node ');
       }
       else {
-        console.log('[OFFSCREEN] Creating new gain node');
         const media = await createMediaSourceNode(msg.data);
 
         // Continue to play the captured audio to the user
         const output = new AudioContext();
         const source = output.createMediaStreamSource(media);
-        //Lower volume by level
-        const gainNode = output.createGain();
+        const gainNode = output.createGain(); //Lower volume by level
         gainNode.gain.value = msg.level;
         source.connect(gainNode);
         gainNode.connect(output.destination);
@@ -42,7 +37,6 @@ chrome.runtime.onMessage.addListener(async (msg) => {
   } 
 
     if (msg.type === 'adjust-level'){
-      
       if (gainNodes.has(msg.tabId)){
         console.log('found gain node');
         const gainNode = gainNodes.get(msg.tabId);
@@ -53,7 +47,6 @@ chrome.runtime.onMessage.addListener(async (msg) => {
       }
     }
 
-    // NOTE: This isn't checking for the case of (gainNode) && !(biquadFilter)
     if (msg.type === 'lowshelf-start'){
       if (gainNodes.has(msg.tabId) && biquadFilters.has(msg.tabId)){
         console.log('[OFFSCREEN] ERROR found gain node in lowshelf-start ');
@@ -62,7 +55,6 @@ chrome.runtime.onMessage.addListener(async (msg) => {
         console.log('[OFFSCREEN-ERROR] Found biquad filter in lowshelf-start');
       }
       else{
-        console.log('[OFFSCREEN] Creating new gain node in lowshelf-start');
 
         // creating a new gainNode
         const media = await createMediaSourceNode(msg.data);
@@ -97,9 +89,6 @@ chrome.runtime.onMessage.addListener(async (msg) => {
     }
 
     if (msg.type === 'lowshelf'){
-
-      console.log('[OFFSCREEN-lowshelf] lowshelf entered');
-
       if(gainNodes.has(msg.tabId) && biquadFilters.has(msg.tabId)){
         console.log('[OFFSCREEN-lowshelf] Found gain node');
         const biquadFilter = biquadFilters.get(msg.tabId);
@@ -107,13 +96,9 @@ chrome.runtime.onMessage.addListener(async (msg) => {
         biquadFilter.frequency.value = 200;
         biquadFilter.gain.value = 6;
       }
-      else{
-        console.log('[OFFSCREEN] lowshelf entered');
-      }
     }
 
     if (msg.type === 'highshelf-start'){
-
       if (gainNodes.has(msg.tabId) && highShelfBiquadFilters.has(msg.tabId)){
         console.log('[OFFSCREEN] ERROR found gain node in highshelf-start ');
       }    
@@ -121,17 +106,12 @@ chrome.runtime.onMessage.addListener(async (msg) => {
         console.log('[OFFSCREEN-ERROR] found gain node in highshelf-start ');
       }
       else{
-      
-        console.log('[OFFSCREEN] Creating new gain node in lowshelf-start');
-        console.log('[OFFSCREEN-highshelf] highshelf entered');
-
         // Create a new source
         const media = await createMediaSourceNode(msg.data); 
         
         // Continue to play the captured audio to the user
         const output = new AudioContext();
         const source = output.createMediaStreamSource(media);
-
         // Create gainNode
         const gainNode = output.createGain();
         //gainNode.gain.value = 0;
@@ -189,14 +169,12 @@ chrome.runtime.onMessage.addListener(async (msg) => {
         }
     }
   if (msg.type === 'default'){
-  console.log('OFFSCREEN] default entered');
-  if(sources.has(msg.tabId)){
-    console.log('[OFFSCREEN] Found gain node');
-    const source = sources.get(msg.tabId);
-    // Remove all filters
-    if (gainNodes.has(msg.tabId)){
-      const gainNode = gainNodes.get(msg.tabId);
-      gainNode.gain.value = 1.0;
+    if(sources.has(msg.tabId)){
+      const source = sources.get(msg.tabId);
+      // Remove all filters
+      if (gainNodes.has(msg.tabId)){
+        const gainNode = gainNodes.get(msg.tabId);
+        gainNode.gain.value = 1.0;
     }
     if(biquadFilters.has(msg.tabId)){
       const biquadFilter = biquadFilters.get(msg.tabId);
@@ -208,24 +186,20 @@ chrome.runtime.onMessage.addListener(async (msg) => {
       eq.disconnect();
       highShelfBiquadFilters.delete(msg.tabId);
     }
-
   }
 }
-
 });
 
 
 async function createMediaSourceNode(streamId){
 
   const media = await navigator.mediaDevices.getUserMedia({
-            audio: {
-              mandatory: {
-                chromeMediaSource: "tab",
-                chromeMediaSourceId: streamId,
-              },
-            },
-          });
-
+    audio: {
+      mandatory: {
+        chromeMediaSource: "tab",
+        chromeMediaSourceId: streamId,
+        },
+      },
+  });
   return media;
-
 }
