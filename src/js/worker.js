@@ -31,58 +31,46 @@ chrome.runtime.onMessage.addListener(async (msg) => {
       //await chrome.storage.local.clear();
       let t = await getCurrentTab();
       let level = await getTabLevel(t.id);
-      // console.log("[SERVICE-WORKER] Get tab title message received");
       let arr = await getCurrentTabTitleAndSound();
 			let title = arr[0];
 			let audible = arr[1];
       muted = arr[2];
-      //console.log("[SERVICE-WORKER] Popup loaded message received sending level: ", level);
       chrome.runtime.sendMessage({ type: 'popup-level', level: level, title: title, audible : audible, muted : muted });
       break;
   case "toggle-mute":
       console.log("[SERVICE-WORKER] Toggle mute message received");
-      //let tabId = msg.tabId;
-      //muted = await getTabMuteStatus(tabId);
-      //muted = await getTabMuteStatus();
       muted = await toggleMuteState();
       chrome.runtime.sendMessage({ type: 'tab-muted', muted: muted });
       break;
   case "adjust-level":
-      //console.log("[SERVICE-WORKER] Adjust level message received");
       currTab = await getCurrentTab();
       await updateTabVolume(currTab.id, msg.level);
       break;
 
     case "testSave":
-      //console.log("[SERVICE-WORKER] Test save message received");
       currTab = await getCurrentTab();
       await testSave(currTab.id);
       break;
 
     case "testGet":
-      //console.log("[SERVICE-WORKER] Test get message received");
       currTab = await getCurrentTab();
       await testGet(currTab.id);
       break;
 
     case "clear-storage":
-      //console.log("[SERVICE-WORKER] Clear storage message received");
       await chrome.storage.local.clear();
       break;
 
     case "lowshelf-worker":
-      //console.log("[SERVICE-WORKER] Lowshelf message received");
       currTab = await getCurrentTab();
       await lowshelf(currTab.id);
       break;
 
     case "highshelf-worker":
-      //console.log("[SERVICE-WORKER] Highshelf message received");
       currTab = await getCurrentTab();
       await highshelf(currTab.id);
       break;
     case "default-worker":
-      //console.log("[SERVICE-WORKER] Default message received");
       currTab = await getCurrentTab();
       await reset(currTab.id);
       break;
@@ -143,7 +131,6 @@ async function getCurrentTabTitleAndSound() {
 		}
     // Get if the tab is currently muted
     muted = tab.mutedInfo.muted;
-    
   } else {
     console.log("No active tab found.");
   }
@@ -202,7 +189,6 @@ async function containsTab(tabId){
   if (tabLevels == null || tabLevels[tabId] == null){
     return false;
   }
-  console.log('tablevels: ' + tabLevels);
   return true;
 }
 
@@ -218,12 +204,9 @@ async function getTabLevel(tabId){
   
   // If level for current tab is not found, return 100
   if (!(await containsTab(tabId)) || tabLevels[tabId] < 0){
-    console.log("!!Level not found for tabId: ", tabId);
     return 100;
   }
   else{
-    
-    console.log("!!Level found for tabId: ", tabId);
     return tabLevels[tabId] * 100;
   }
 }
@@ -248,7 +231,6 @@ async function createOffscreenDocument(){
         reasons: ['USER_MEDIA'],
         justification: 'Adjust tab audio volume'
       });
-      console.log("Created offscreen document");
     }
 }
 
@@ -268,7 +250,6 @@ async function lowshelf(tabId){
     chrome.runtime.sendMessage({ type: 'lowshelf', target: 'offscreen', tabId: tabId});
   }
   else{
-    console.log("[SERVICE-WORKER] tab not found in activeStreams W/ tabId: ", tabId);
     const streamId = await chrome.tabCapture.getMediaStreamId({
       targetTabId: tabId
     });
@@ -287,11 +268,10 @@ async function lowshelf(tabId){
  */
 // Adjust frequencies for highshelf filter
 async function highshelf(tabId){
-  console.log("[SERVICE-WORKER] Highshelf function called");
   await createOffscreenDocument();
   let tabIdS = tabId.toString();
   
-  if (await containsTab(tabIdS)){
+  if (await containsTab(tabIdS)) {
     chrome.runtime.sendMessage({ type: 'highshelf', target: 'offscreen', tabId: tabId});
   }
   else {
@@ -317,13 +297,11 @@ async function updateTabVolume(tabId, volume){
   let volumeS = volume.toString();
   // Tab already exits
   if(await containsTab(tabIdS)){
-    console.log("[WORKER] tab found in activeStreams W/ tabId: ", tabId, " volume: ", volume);
     chrome.runtime.sendMessage({ type: 'adjust-level', target: 'offscreen', tabId: tabId, level: volume});
     await saveTabLevel(tabIdS, volumeS);
   }
   // Tab doesn't exist
   else{
-    console.log("[WORKER] tab not found in activeStreams W/ tabId: ", tabId, " volume: ", volume);
     // Get a MediaStream for the Active Tab
     const streamId = await chrome.tabCapture.getMediaStreamId({
       targetTabId: tabId
@@ -332,9 +310,7 @@ async function updateTabVolume(tabId, volume){
     chrome.runtime.sendMessage({ type: 'start-recording', target: 'offscreen', data: streamId, tabId: tabId, level: volume});
     await saveTabLevel(tabIdS, volumeS);
   }
-  console.log("BEFORE");
   await getCurrentTabTitle();
-  console.log("AFTER");
 }
 
 
