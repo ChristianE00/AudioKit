@@ -39,6 +39,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
     
+    function truncateString(str, maxLength) {
+      if (str.length > maxLength) {
+          return str.slice(0, maxLength) + '...';
+      }
+      return str;
+    }
 
     suggestionCloseButton.addEventListener('click', function() {
       // document.getElementById('suggestionBoxWrapper').style.display = 'none';
@@ -75,24 +81,26 @@ document.addEventListener('DOMContentLoaded', async () => {
       switch (msg.type) {
         case "popup-level":
           const level = msg.level;
-          const title = msg.title;
+          const title = truncateString(msg.title, 20);
           const audible = msg.audible;
           muted = msg.muted;
-          const titleTextNode = currentTabTitle.firstChild;
-          titleTextNode.textContent = `current tab: ${title} `;
+          //const titleTextNode = currentTabTitle.firstChild;
+         // titleTextNode.textContent = `current tab: ${title} `;
+         currentTabTitle.innerText = `current tab: ${title} `;
+
 
           // ! Move into a function
           updateTabMuteStatus(muted);
 
           if (audible == "True"){
             audibleEntry.style.color = "green";
-            audibleEntry.innerText = "-- Audible";
+            //audibleEntry.innerText = "-- Audible";
             console.log("Is Audible");
             
           }
           else {
             audibleEntry.style.color = "red";
-            audibleEntry.innerText = "-- Not Audible";
+            //audibleEntry.innerText = "-- Not Audible";
             console.log(" not audible");
           }
           rangeValue.innerText = level;
@@ -104,11 +112,13 @@ document.addEventListener('DOMContentLoaded', async () => {
           updateTabMuteStatus(muted);
       }
     });
+    
+    
 
     function updateTabMuteStatus(muted) {
       // tabMutedToggleButton.innerText = `Tab muted: ${muted} `;
       console.log("updateTabMuteStatus: ", muted);
-      tabMuted.innerText = `Tab muted: ${muted} `;
+      //tabMuted.innerText = `Muted: ${muted} `;
       if (muted == "true"){
         console.log("muted");
         tabMuteIcon.className = 'fa-solid fa-volume-xmark';

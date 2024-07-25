@@ -49,3 +49,11 @@ body {
     width: 700px;
     height: 500px;
 }
+
+/* styles.css */
+.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%; /* Adjust as needed */
+}
