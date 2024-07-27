@@ -9,7 +9,7 @@ function sum(a, b) {
     return a + b;
 }
 
-module.exports = { worker, sum, getTabLevel, containsTab, getCurrentTab};
+module.exports = { worker, sum, getTabLevel, containsTab, getCurrentTab };
 
 // Clear previous session ID's.
 chrome.runtime.onStartup.addListener(function() {
@@ -35,6 +35,7 @@ chrome.runtime.onMessage.addListener(async (msg) => {
 			let title = arr[0];
 			let audible = arr[1];
       muted = arr[2];
+      await getAllTabTitlesAndSounds();
       chrome.runtime.sendMessage({ type: 'popup-level', level: level, title: title, audible : audible, muted : muted });
       break;
   case "toggle-mute":
@@ -152,10 +153,14 @@ async function getAllTabTitlesAndSounds() {
   let tabTitle = [], tabAudio = [], tabMuted = [];
   for (const tab of tabs) { 
     if (tab) {
+      console.log(` !!Title: ${tab.title}`);
       tabTitle.push(tab.title);
+      console.log(` !!Muted: ${tab.mutedInfo.muted}`);
+      console.log(` !!Audible: ${tab.audible}`);
       tabMuted.push((tab.mutedInfo.muted).toString())
       if (tab.audible) {
         tabAudio.push("true");
+        
       }
       else {
         tabAudio.push("false");
