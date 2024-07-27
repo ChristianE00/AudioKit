@@ -1,4 +1,3 @@
-Certainly! Here's the README in .md format:
 
 # AudioKit: Chrome Equalizer Extension
 
