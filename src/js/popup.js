@@ -1,4 +1,12 @@
 
+function sendAllTabsMuteStatus(muted) {
+    if (muted) {
+        chrome.runtime.sendMessage({ type: 'mute-all' });
+    }
+    else {
+        chrome.runtime.sendMessage({ type: 'unmute-all' });
+    }
+}
 let hideSuggestions = false;
 document.addEventListener('DOMContentLoaded', async () => {
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -64,7 +72,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           // ! Move into a function
           updateTabMuteStatus(muted);
 
-          if (audible == "True"){
+          if (audible === "True"){
             audibleEntry.style.color = "green";
             //audibleEntry.innerText = "-- Audible";
           }
@@ -84,7 +92,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
     function updateTabMuteStatus(muted) {
-      if (muted == "true"){
+      if (muted === "true"){
         tabMuteIcon.className = 'fa-solid fa-volume-xmark';
         tabMuted.style.color = "green";
       }

@@ -43,6 +43,14 @@ chrome.runtime.onMessage.addListener(async (msg) => {
       muted = await toggleMuteState();
       chrome.runtime.sendMessage({ type: 'tab-muted', muted: muted });
       break;
+    case "mute-all":
+      await allTabMuteState(true);
+      chrome.runtime.sendMessage ( {type: 'tab-muted', muted: "true"});
+      break;
+    case "unmute-all":
+        await allTabMuteState(false);
+        chrome.runtime.sendMessage ( {type: 'tab-muted', muted: "false"});
+        break;
   case "adjust-level":
       currTab = await getCurrentTab();
       await updateTabVolume(currTab.id, msg.level);
@@ -93,7 +101,13 @@ async function reset(tabId){
     
 
 }
-
+async function allTabMuteState(muted) {
+    let queryOptions = {} // Get tabs across all chrome windows
+    let tabs = await chrome.tabs.query(queryOptions);
+        for (const tab of tabs){
+            await chrome.tabs.update(tab.id, { muted: muted });
+        }
+}
 
 async function toggleMuteState() {
   let queryOptions = { active: true, lastFocusedWindow: true };
