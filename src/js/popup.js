@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     suggestionCloseButton.addEventListener('click', function() {
       // document.getElementById('suggestionBoxWrapper').style.display = 'none';
       hideSuggestions = true;
+      document.getElementById('suggestionBox').style.display = 'none';
 
       // save volue to chrome.storage.local
       chrome.storage.local.set({ hideSuggestions: hideSuggestions }, function() {
