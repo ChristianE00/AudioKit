@@ -15,30 +15,26 @@ module.exports = { worker, sum, getTabLevel, containsTab, getCurrentTab };
 chrome.runtime.onStartup.addListener(function() {
   console.log("Browser opened CLEARING CACHE");
   chrome.storage.local.clear();
-
-
 });
 
 
 const activeStreams = new Map();
 // Messages from the popup
 chrome.runtime.onMessage.addListener(async (msg) => {
-//  console.log("Message received from popup");
   let currTab;
   let muted;
   switch (msg.type) {
     case "popup-loaded":
-      //await chrome.storage.local.clear();
       let t = await getCurrentTab();
       let level = await getTabLevel(t.id);
       let arr = await getCurrentTabTitleAndSound();
-			let title = arr[0];
-			let audible = arr[1];
+      let title = arr[0];
+      let audible = arr[1];
       muted = arr[2];
       await getAllTabTitlesAndSounds();
       chrome.runtime.sendMessage({ type: 'popup-level', level: level, title: title, audible : audible, muted : muted });
       break;
-  case "toggle-mute":
+    case "toggle-mute":
       console.log("[SERVICE-WORKER] Toggle mute message received");
       muted = await toggleMuteState();
       chrome.runtime.sendMessage({ type: 'tab-muted', muted: muted });
@@ -51,33 +47,28 @@ chrome.runtime.onMessage.addListener(async (msg) => {
         await allTabMuteState(false);
         chrome.runtime.sendMessage ( {type: 'tab-muted', muted: "false"});
         break;
-  case "adjust-level":
+    case "adjust-level":
       currTab = await getCurrentTab();
       await updateTabVolume(currTab.id, msg.level);
       break;
-
-    case "testSave":
-      currTab = await getCurrentTab();
-      await testSave(currTab.id);
-      break;
-
-    case "testGet":
-      currTab = await getCurrentTab();
-      await testGet(currTab.id);
-      break;
-
     case "clear-storage":
       await chrome.storage.local.clear();
       break;
-
     case "lowshelf-worker":
       currTab = await getCurrentTab();
       await lowshelf(currTab.id);
       break;
-
     case "highshelf-worker":
       currTab = await getCurrentTab();
       await highshelf(currTab.id);
+      break;
+    case "testSave":
+      currTab = await getCurrentTab();
+      await testSave(currTab.id);
+      break;
+    case "testGet":
+      currTab = await getCurrentTab();
+      await testGet(currTab.id);
       break;
     case "default-worker":
       currTab = await getCurrentTab();
@@ -98,9 +89,14 @@ async function reset(tabId){
         await saveTabLevel(tabId, 1);
         chrome.runtime.sendMessage({ type: 'popup-level', level: 100});
     }
-    
-
 }
+
+
+/**
+ * Change the mute state of all tabs
+ * @param muted
+ * @returns {Promise<void>}
+ */
 async function allTabMuteState(muted) {
     let queryOptions = {} // Get tabs across all chrome windows
     let tabs = await chrome.tabs.query(queryOptions);
@@ -109,6 +105,11 @@ async function allTabMuteState(muted) {
         }
 }
 
+
+/**
+ * Toggles the mute state of the current tab
+ * @returns {Promise<string>}
+ */
 async function toggleMuteState() {
   let queryOptions = { active: true, lastFocusedWindow: true };
   let [tab] = await chrome.tabs.query(queryOptions);
@@ -118,7 +119,10 @@ async function toggleMuteState() {
 }
 
 
-//async function getTabMuteStatus(tabId) {
+/**
+ * Get the mute status of the current tab
+ * @returns {Promise<string>}
+ */
 async function getTabMuteStatus() {
   let queryOptions = { active: true, lastFocusedWindow: true };
   let [tab] = await chrome.tabs.query(queryOptions);
@@ -190,7 +194,6 @@ async function getAllTabTitlesAndSounds() {
  *
  */
 async function getAllTabTitles() {
-  // ! fix
   let queryOptions = {}; // * Get tabs across all chrome windows
   let tabs = await chrome.tabs.query(queryOptions);
   let titles = []; 
@@ -237,28 +240,25 @@ async function saveTabLevel(tabId, level){
     tabLevels = items.levels;
     tabLevels[tabId] = level;
   }
-
   await chrome.storage.local.set({levels: tabLevels});
 }
 
 
 /**
- *
+ * Check if the tab exists in the activeStreams map
  * @param {string}
  *
  */
 async function containsTab(tabId){
   let items = await chrome.storage.local.get('levels');
   let tabLevels = items.levels;
-  if (tabLevels == null || tabLevels[tabId] == null){
-    return false;
-  }
-  return true;
+  return !(tabLevels == null || tabLevels[tabId] == null);
+
 }
 
 
 /**
- *
+ * Get the current tab's audio level
  * @param {string}
  *
  */
@@ -277,11 +277,10 @@ async function getTabLevel(tabId){
 
 
 /**
- *
+ * Creates an offscreen document if it doesn't exist
  * @param {string}
  *
  */
-// Create offscreen document if it doesn't exist
 async function createOffscreenDocument(){
     // OFFSCREEN document
     if (await chrome.offscreen.hasDocument()) {
@@ -300,11 +299,10 @@ async function createOffscreenDocument(){
 
 
 /**
- *
+ * Adjust bass frequencies with lowshelf filter
  * @param {string}
  *
  */
-// Adjust bass frequencies with lowshelf filter
 async function lowshelf(tabId){
   console.log("[SERVICE-WORKER] Lowshelf function called");
   await createOffscreenDocument();
@@ -326,11 +324,10 @@ async function lowshelf(tabId){
 
 
 /**
- *
+ * Adjust frequencies of highshelf filter
  * @param {string}
  *
  */
-// Adjust frequencies for highshelf filter
 async function highshelf(tabId){
   await createOffscreenDocument();
   let tabIdS = tabId.toString();
