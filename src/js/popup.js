@@ -23,6 +23,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     let tabMuteIcon = document.getElementById("tabMuteIcon");
     let tabMuted = document.getElementById("tabMuted");
     let tabMutedToggleButton = document.getElementById("signalToggleMuteButton"); 
+    let tabMuteAllIcon = document.getElementById("tabMuteAllIcon");
+    let tabMutedAllButton = document.getElementById("signalToggleMuteAllButton");
 
     chrome.storage.local.get(['hideSuggestions'], function(result) {
       hideSuggestions = result.hideSuggestions || false;
@@ -42,6 +44,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log('Value is set to ' + hideSuggestions);
       });
       
+    });
+
+    tabMutedAllButton.addEventListener('click', function() {
+      sendAllTabsMuteStatus('mute-all');
     });
 
     voiceBoost.addEventListener('click', async () => {
