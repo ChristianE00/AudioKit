@@ -1,6 +1,8 @@
 
 # AudioKit: Chrome Equalizer Extension
 
+_Note: We currently support Chromium based browser as this extension uses Manifest V3_
+
 ## Overview
 
 AudioKit is a lightweight, open-source Chrome extension that allows users to adjust volume and equalize sound on web pages. It provides an intuitive interface for controlling audio settings and enhancing the listening experience across various websites.
