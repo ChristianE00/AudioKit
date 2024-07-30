@@ -8,7 +8,8 @@
       "tabs",
       "tabCapture",
       "offscreen",
-      "activeTab"
+      "activeTab",
+      "scripting"
     ],
     "action": {
       "default_popup": "home.html",
@@ -17,9 +18,16 @@
     "background": {
       "service_worker": "./dist/main.js"
     },
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "css": ["./src/css/style.css"],
+        "js": ["./src/js/content.js"]
+      }
+    ],
     "web_accessible_resources": [
       {
-        "resources": ["./src/js/offscreen.js"],
+        "resources": ["./src/js/offscreen.js","assets/icons/icon.png"],
         "matches": ["<all_urls>"]
       }
     ]

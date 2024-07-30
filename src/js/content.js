@@ -1,3 +1,38 @@
+// Create the floating icon element
+const floatingIcon = document.createElement('dev');
+floatingIcon.id = 'floating-extension-icon';
+
+// Create an image element for the icon
+const iconImage = document.createElement('img');
+iconImage.src = chrome.runtime.getURL('assets/icons/icon.png');
+iconImage.style.width = '24px';
+iconImage.style.height = '24px';
+floatingIcon.appendChild(iconImage);
+
+
+// Style the floating icon
+floatingIcon.style.position = 'fixed';
+floatingIcon.style.bottom = '20px';
+floatingIcon.style.right = '20px';
+floatingIcon.style.zIndex = '9999';
+floatingIcon.style.cursor = 'pointer';
+floatingIcon.style.padding = '10px';
+floatingIcon.style.backgroundColor = '#ffffff';
+floatingIcon.style.boarderRadius = '50%';
+floatingIcon.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+
+// Add a click event listener
+floatingIcon.addEventListener('click', function() {
+    console.log('[CONTENT] Floating icon clicked');
+    chrome.runtime.sendMessage({type: 'openPopup'});
+});
+
+// Add the floating icon to the page
+document.body.appendChild(floatingIcon);
+
+
+
+
 
 /*
 console.log("content.js loaded");

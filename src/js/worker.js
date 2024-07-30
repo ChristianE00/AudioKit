@@ -11,6 +11,7 @@ function sum(a, b) {
 
 module.exports = { worker, sum, getTabLevel, containsTab, getCurrentTab };
 
+
 // Clear previous session ID's.
 chrome.runtime.onStartup.addListener(function() {
   console.log("Browser opened CLEARING CACHE");
@@ -24,6 +25,11 @@ chrome.runtime.onMessage.addListener(async (msg) => {
   let currTab;
   let muted;
   switch (msg.type) {
+    case "openPopup":
+      // ! Need to handle case where popup is already open -- currently throws exception, but handles gracefully
+      console.log("[SERVICE-WORKER] Open popup message received");
+      chrome.action.openPopup();
+      break;
     case "popup-loaded":
       let t = await getCurrentTab();
       let level = await getTabLevel(t.id);
