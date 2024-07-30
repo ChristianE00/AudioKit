@@ -175,20 +175,15 @@ async function getCurrentTabTitleAndSound() {
  *
  */
 async function getAllTabTitlesAndSounds() {
-  // ! fix
   let queryOptions = {}; // * Get tabs across all chrome windows
   let tabs = await chrome.tabs.query(queryOptions);
   let tabTitle = [], tabAudio = [], tabMuted = [];
   for (const tab of tabs) { 
     if (tab) {
-      console.log(` !!Title: ${tab.title}`);
       tabTitle.push(tab.title);
-      console.log(` !!Muted: ${tab.mutedInfo.muted}`);
-      console.log(` !!Audible: ${tab.audible}`);
       tabMuted.push((tab.mutedInfo.muted).toString())
       if (tab.audible) {
         tabAudio.push("true");
-        
       }
       else {
         tabAudio.push("false");
