@@ -1,3 +1,4 @@
+/*
 // Create the floating icon element
 const floatingIcon = document.createElement('dev');
 floatingIcon.id = 'floating-extension-icon';
@@ -5,18 +6,18 @@ floatingIcon.id = 'floating-extension-icon';
 // Create an image element for the icon
 const iconImage = document.createElement('img');
 iconImage.src = chrome.runtime.getURL('assets/icons/icon.png');
-iconImage.style.width = '24px';
-iconImage.style.height = '24px';
+iconImage.style.width = '6px';
+iconImage.style.height = '6px';
 floatingIcon.appendChild(iconImage);
 
 
 // Style the floating icon
 floatingIcon.style.position = 'fixed';
-floatingIcon.style.bottom = '20px';
-floatingIcon.style.right = '20px';
+floatingIcon.style.bottom = '5px';
+floatingIcon.style.right = '5px';
 floatingIcon.style.zIndex = '9999';
 floatingIcon.style.cursor = 'pointer';
-floatingIcon.style.padding = '10px';
+floatingIcon.style.padding = '1px';
 floatingIcon.style.backgroundColor = '#ffffff';
 floatingIcon.style.boarderRadius = '50%';
 floatingIcon.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
@@ -28,9 +29,9 @@ floatingIcon.addEventListener('click', function() {
 });
 
 // Add the floating icon to the page
-document.body.appendChild(floatingIcon);
+// document.body.appendChild(floatingIcon);
 
-
+*/
 
 
 
@@ -210,3 +211,41 @@ function adjustFrequency(frequency, dB) {
     });
 }
 */
+// ! manifest
+/*
+
+{
+    "manifest_version": 3,
+    "name": "Volume Adjuster and Equalizer",
+    "version": "1.0",
+    "description": "A simple volume adjuster and equalizer extension",
+    "permissions": [
+      "storage",
+      "tabs",
+      "tabCapture",
+      "offscreen",
+      "activeTab",
+      "scripting"
+    ],
+    "action": {
+      "default_popup": "home.html",
+      "default_icon": "./assets/icons/icon.png"
+    },
+    "background": {
+      "service_worker": "./dist/main.js"
+    },
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "css": ["./src/css/style.css"],
+        "js": ["./src/js/content.js"]
+      }
+    ],
+    "web_accessible_resources": [
+      {
+        "resources": ["./src/js/offscreen.js","assets/icons/icon.png"],
+        "matches": ["<all_urls>"]
+      }
+    ]
+  }
+ */

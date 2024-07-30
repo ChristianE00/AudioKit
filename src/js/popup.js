@@ -9,9 +9,47 @@ function sendAllTabsMuteStatus(muted) {
 }
 let hideSuggestions = false;
 document.addEventListener('DOMContentLoaded', async () => {
+    console.log('Popup loaded');
+
+    // Sender
+    function sendMessagePromise(message) {
+        return new Promise((resolve, reject) => {
+            chrome.runtime.sendMessage(message, response => {
+                if (chrome.runtime.lastError) {
+                    reject(chrome.runtime.lastError);
+                } else {
+                    resolve(response);
+                }
+            });
+        });
+    }
+
+// Usage
+    async function getDataFromReceiver() {
+        try {
+            const response = await sendMessagePromise({type: "get-tab"});
+            console.log("Received response:", response);
+            if (response && response.data) {
+                processData(response.data);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+
+    function processData(data) {
+        console.log("Processing data tabid: ", data);
+        return data
+    }
+
+    
+
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-    const tabId = tabs[0].id;
-    const url = tabs[0].url;
+    let tab = tabs[0];
+    let tabId = tab.id;
+    const url = tab.url;
+
+
     let rangeValue = document.getElementById('rangeValue');
     let volumeSlider = document.getElementById('volumeSlider');
     let voiceBoost = document.getElementById('voiceBoost');
@@ -26,7 +64,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let tabMuteAllIcon = document.getElementById("tabMuteAllIcon");
     let tabMutedAllButton = document.getElementById("signalToggleMuteAllButton");
     let tabUnmuteAllIcon = document.getElementById("tabUnmuteAllIcon");
-signalToggleUnmuteAllButton
+//signalToggleUnmuteAllButton
     let tabUnmutedAllButton = document.getElementById("signalToggleUnmuteAllButton");
 
     chrome.storage.local.get(['hideSuggestions'], function(result) {

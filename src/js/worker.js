@@ -21,10 +21,14 @@ chrome.runtime.onStartup.addListener(function() {
 
 const activeStreams = new Map();
 // Messages from the popup
-chrome.runtime.onMessage.addListener(async (msg) => {
+chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
   let currTab;
   let muted;
   switch (msg.type) {
+    case "get-tab-id":
+      currTab = await getCurrentTab();
+      sendResponse({data: "Here's your data!"});
+      break;
     case "openPopup":
       // ! Need to handle case where popup is already open -- currently throws exception, but handles gracefully
       console.log("[SERVICE-WORKER] Open popup message received");
