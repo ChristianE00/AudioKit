@@ -117,10 +117,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       switch (msg.type) {
         case "popup-level":
           const level = msg.level;
-          const title = truncateString(msg.title, 30);
+          const title = truncateString(msg.title, 60);
           const audible = msg.audible;
           muted = msg.muted;
-          currentTabTitle.innerText = `Tab: ${title} `;
+          currentTabTitle.innerText = ` ${title} `;
 
           // ! Move into a function
           updateTabMuteStatus(muted);
