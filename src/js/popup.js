@@ -8,8 +8,25 @@ function sendAllTabsMuteStatus(muted) {
     }
 }
 let hideSuggestions = false;
+
+// Wait for zhe DOM to load
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('Popup loaded');
+    let rangeValue = document.getElementById('rangeValue');
+    let volumeSlider = document.getElementById('volumeSlider');
+    let voiceBoost = document.getElementById('voiceBoost');
+    let bassBoost = document.getElementById('bassBoost'); 
+    let defaultButton = document.getElementById("defaultButton");
+    let suggestionCloseButton = document.getElementById("signalRemoveElement");
+    let currentTabTitle = document.getElementById("currentTabTitle");
+    let audibleEntry = document.getElementById("isAudible");
+    let tabMuteIcon = document.getElementById("tabMuteIcon");
+    let tabMuted = document.getElementById("tabMuted");
+    let tabMutedToggleButton = document.getElementById("signalToggleMuteButton"); 
+    let tabMuteAllIcon = document.getElementById("tabMuteAllIcon");
+    let tabMutedAllButton = document.getElementById("signalToggleMuteAllButton");
+    let tabUnmuteAllIcon = document.getElementById("tabUnmuteAllIcon");
+    let tabUnmutedAllButton = document.getElementById("signalToggleUnmuteAllButton");
 
     // Sender
     function sendMessagePromise(message) {
@@ -24,7 +41,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-// Usage
     async function getDataFromReceiver() {
         try {
             const response = await sendMessagePromise({type: "get-tab"});
@@ -50,22 +66,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const url = tab.url;
 
 
-    let rangeValue = document.getElementById('rangeValue');
-    let volumeSlider = document.getElementById('volumeSlider');
-    let voiceBoost = document.getElementById('voiceBoost');
-    let bassBoost = document.getElementById('bassBoost'); 
-    let defaultButton = document.getElementById("defaultButton");
-    let suggestionCloseButton = document.getElementById("signalRemoveElement");
-    let currentTabTitle = document.getElementById("currentTabTitle");
-    let audibleEntry = document.getElementById("isAudible");
-    let tabMuteIcon = document.getElementById("tabMuteIcon");
-    let tabMuted = document.getElementById("tabMuted");
-    let tabMutedToggleButton = document.getElementById("signalToggleMuteButton"); 
-    let tabMuteAllIcon = document.getElementById("tabMuteAllIcon");
-    let tabMutedAllButton = document.getElementById("signalToggleMuteAllButton");
-    let tabUnmuteAllIcon = document.getElementById("tabUnmuteAllIcon");
-//signalToggleUnmuteAllButton
-    let tabUnmutedAllButton = document.getElementById("signalToggleUnmuteAllButton");
+
 
     chrome.storage.local.get(['hideSuggestions'], function(result) {
       hideSuggestions = result.hideSuggestions || false;
@@ -76,7 +77,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     suggestionCloseButton.addEventListener('click', function() {
-      // document.getElementById('suggestionBoxWrapper').style.display = 'none';
       hideSuggestions = true;
       document.getElementById('suggestionBox').style.display = 'none';
 
@@ -127,12 +127,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
           if (audible === "True"){
             audibleEntry.style.color = "green";
-            //audibleEntry.innerText = "-- Audible";
           }
           else {
             audibleEntry.style.color = "red";
-            //audibleEntry.innerText = "-- Not Audible";
           }
+
           rangeValue.innerText = level;
           volumeSlider.value = level;
           break;
@@ -140,6 +139,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         case "tab-muted":
           muted = msg.muted;
           updateTabMuteStatus(muted);
+
       }
     });
 
