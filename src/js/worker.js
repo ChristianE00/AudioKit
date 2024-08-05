@@ -54,9 +54,9 @@ chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
       chrome.runtime.sendMessage ( {type: 'tab-muted', muted: "true"});
       break;
     case "unmute-all":
-        await allTabMuteState(false);
-        chrome.runtime.sendMessage ( {type: 'tab-muted', muted: "false"});
-        break;
+      await allTabMuteState(false);
+      chrome.runtime.sendMessage ( {type: 'tab-muted', muted: "false"});
+      break;
     case "adjust-level":
       currTab = await getCurrentTab();
       await updateTabVolume(currTab.id, msg.level);
