@@ -376,7 +376,7 @@ async function updateTabVolume(tabId, volume){
     chrome.runtime.sendMessage({ type: 'start-recording', target: 'offscreen', data: streamId, tabId: tabId, level: volume});
     await saveTabLevel(tabIdS, volumeS);
   }
-  await getCurrentTabTitle();
+  //await getCurrentTabTitle();
 }
 
 
