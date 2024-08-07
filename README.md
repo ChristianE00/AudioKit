@@ -32,7 +32,7 @@ AudioKit is a lightweight, open-source Chrome extension that allows users to adj
 
 ## Setup Instructions
 
-1. Ensure you have [Node.js](https://nodejs.org/) and npm installed.
+1. Ensure you have [Node.js](https://nodejs.org/en) and npm installed.
 
 2. Clone the repository:
    ```
