@@ -98,5 +98,6 @@ This project is open source and available under the [ISC License](LICENSE).
 For bug reports, feature requests, or general feedback, please [open an issue](https://github.com/ChristianE00/equalizerExtension/issues) on GitHub.
 
 ---
-
+<p align="center">
 Made with ❤️ by the AudioKit team
+</p>
