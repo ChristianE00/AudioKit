@@ -3,6 +3,7 @@
 <p align="center">
   <img src="https://github.com/user-attachments/assets/a92ada43-67ae-4671-b2f5-ab7afd2da1e4" alt="Description" />
 </p>
+
 _Note: We currently support Chromium based browser as this extension uses Manifest V3_
 
 ## Overview
