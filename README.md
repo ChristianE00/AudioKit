@@ -4,7 +4,7 @@
   <img src="https://github.com/user-attachments/assets/a92ada43-67ae-4671-b2f5-ab7afd2da1e4" alt="Description" />
 </p>
 
-_Note: This extension is compatible with Chromium-based browsers, as it utilizes Manifest V3 technology._
+_Note: This extension is compatible with Chromium-based browsers, as we utilize Manifest V3._
 
 ## Overview
 
