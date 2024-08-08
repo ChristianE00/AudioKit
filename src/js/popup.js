@@ -31,14 +31,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Update UI to list the 4 tabs that are currently playing audio
    function updateUITabList(tabs) {
-    if (tabs.length === 0 ) {
+    let length = (tabs.length > 4) ? 4 : tabs.length;
+    if (length === 0)  {
         tabList.hidden = true;
         return;
     }
     tabList.hidden = false;
-    for (let tab of tabs) {
+    for (let i = 0; i < length; i++) {
         let el = document.createElement('p');
-        el.textContent = tab;
+        el.textContent = tabs[i];
         tabList.append(el);
     }
 
@@ -157,6 +158,8 @@ document.addEventListener('DOMContentLoaded', async () => {
           const audible = msg.audible;
           muted = msg.muted;
           currentTabTitle.innerText = ` ${title} `;
+          const allTabs = msg.allTabs;
+          updateUITabList(allTabs);
 
           // ! Move into a function
           updateTabMuteStatus(muted);

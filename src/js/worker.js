@@ -41,8 +41,13 @@ chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
       let title = arr[0];
       let audible = arr[1];
       muted = arr[2];
+      let allTabs = await getAllTabTitles();
+      /*for(let t of allTabs){
+        console.log("__Tab--:", t);
+      }
+      */
       await getAllTabTitlesAndSounds();
-      chrome.runtime.sendMessage({ type: 'popup-level', level: level, title: title, audible : audible, muted : muted });
+      chrome.runtime.sendMessage({ type: 'popup-level', level: level, title: title, audible : audible, muted : muted, allTabs: allTabs});
       break;
     case "toggle-mute":
       console.log("[SERVICE-WORKER] Toggle mute message received");
@@ -178,9 +183,11 @@ async function getAllTabTitlesAndSounds() {
   let queryOptions = {}; // * Get tabs across all chrome windows
   let tabs = await chrome.tabs.query(queryOptions);
   let tabTitle = [], tabAudio = [], tabMuted = [];
+  console.log(`length: ${tabs.length}`);
   for (const tab of tabs) { 
     if (tab) {
       tabTitle.push(tab.title);
+      console.log(` Title: ${tab.title}`);
       tabMuted.push((tab.mutedInfo.muted).toString())
       if (tab.audible) {
         tabAudio.push("true");
@@ -204,6 +211,7 @@ async function getAllTabTitles() {
   let titles = []; 
   for (const tab of tabs) {
     if (tab) {
+      console.log(` Titleee: ${tab.title}`);
       titles.push(tab.title);
     }
 
