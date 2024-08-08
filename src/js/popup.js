@@ -27,6 +27,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     let tabMutedAllButton = document.getElementById("signalToggleMuteAllButton");
     let tabUnmuteAllIcon = document.getElementById("tabUnmuteAllIcon");
     let tabUnmutedAllButton = document.getElementById("signalToggleUnmuteAllButton");
+    let tabList = document.getElementById("tabList");
+
+    // Update UI to list the 4 tabs that are currently playing audio
+   function updateUITabList(tabs) {
+    if (tabs.length === 0 ) {
+        tabList.hidden = true;
+        return;
+    }
+    tabList.hidden = false;
+    for (let tab of tabs) {
+        let el = document.createElement('p');
+        el.textContent = tab;
+        tabList.append(el);
+    }
+
+   }
+
+
 
     // Sender
     function sendMessagePromise(message) {
@@ -51,6 +69,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch (error) {
             console.error("Error:", error);
         }
+    }
+
+    async function getTabDataFromReceiver() {
+        try {
+            const response = await sendMessagePromise({type: "get-tabs"});
+            console.log("Received response:", response);
+            if (response && response.data) {
+                processData(response.data);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+
+    function processTabsData(tabs){
+      for (let tab of tabs) {
+        console.log("!!Tab: ", tab);
+      }
     }
 
     function processData(data) {
