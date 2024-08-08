@@ -47,14 +47,18 @@ AudioKit is a lightweight, open-source Chrome extension that allows users to adj
    ```
    npm install
    ```
+4. Install Webpack
+   ```
+   npm install --save-dev webpack
+   ```
 
-4. Build the project:
+5. Build the project:
    ```
    npm run build
    ```
    This command runs Webpack and Tailwind CSS to compile the necessary files.
 
-5. Load the extension in Chrome:
+6. Load the extension in Chrome:
    - Open Chrome and navigate to `chrome://extensions`
    - Enable "Developer mode" in the top right corner
    - Click "Load unpacked" and select the project directory
