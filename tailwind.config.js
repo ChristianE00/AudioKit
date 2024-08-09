@@ -9,6 +9,9 @@ module.exports = {
     "./src/**/*.js",
     "./*.html"
   ],
+  options : {
+    safelist: ['text-green-500', 'text-red-500'],
+  },
   theme: {
     extend: {},
   },

@@ -185,11 +185,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function updateTabMuteStatus(muted) {
       if (muted === "true"){
-        tabMuteIcon.className = 'fa-solid fa-volume-xmark';
+        tabMuteIcon.className = 'fa-solid fa-volume-xmark ';
         tabMuted.style.color = "green";
+        
+        // NOTE: Get this working in the future
+        //tabMuted.classList.contains('text-red-500') ? tabMuted.classList.remove('text-red-500') : null;
+        //tabMuted.classList.add('text-green-500');
       }
       else {
         tabMuteIcon.className = 'fa-solid fa-volume-high';
+        // NOTE: Get this working in the future
+        //tabMuted.classList.contains('text-green-500') ? tabMuted.classList.remove('text-green-500') : null;
+        //tabMuted.classList.add('text-red-500');
         tabMuted.style.color = "red"; 
       }
     }

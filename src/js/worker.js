@@ -41,7 +41,7 @@ chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
       let title = arr[0];
       let audible = arr[1];
       muted = arr[2];
-      let allTabs = await getAllTabTitles();
+      let allTabs = await getAllTabTitlesWithAudio();
       /*for(let t of allTabs){
         console.log("__Tab--:", t);
       }
@@ -200,6 +200,27 @@ async function getAllTabTitlesAndSounds() {
   return [tabTitle, tabAudio, tabMuted];
 }
 
+
+/**
+ *
+ *
+ */
+async function getAllTabTitlesWithAudio() {
+  let queryOptions = {}; // * Get tabs across all chrome windows
+  let tabs = await chrome.tabs.query(queryOptions);
+  let titles = []; 
+  // Get all tab titles that are currently audible
+  for (const tab of tabs) {
+    if (tab) {
+      if (tab.audible) {
+        console.log(` Titleee: ${tab.title}`);
+        titles.push(tab.title);
+      }
+    }
+
+  }
+  return titles
+}
 
 /**
  *
