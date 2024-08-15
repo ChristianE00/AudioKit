@@ -1,8 +1,6 @@
-
+// ! Remove for prod
 function worker(a, b) {
-
     return a + b;
-
 }
 
 function sum(a, b) {
@@ -221,6 +219,7 @@ async function getAllTabTitlesWithAudio() {
   }
   return titles
 }
+
 
 /**
  *

@@ -42,10 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         el.textContent = tabs[i];
         tabList.append(el);
     }
-
    }
-
-
 
     // Sender
     function sendMessagePromise(message) {
@@ -72,6 +69,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+
     async function getTabDataFromReceiver() {
         try {
             const response = await sendMessagePromise({type: "get-tabs"});
@@ -84,11 +82,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+
     function processTabsData(tabs){
       for (let tab of tabs) {
         console.log("!!Tab: ", tab);
       }
     }
+
 
     function processData(data) {
         console.log("Processing data tabid: ", data);
@@ -96,13 +96,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     
-
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
     let tab = tabs[0];
     let tabId = tab.id;
     const url = tab.url;
-
-
 
 
     chrome.storage.local.get(['hideSuggestions'], function(result) {
@@ -148,13 +145,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // Set volume slider and range value to the current volume level
-    
-     chrome.runtime.onMessage.addListener( (msg) => {
+    chrome.runtime.onMessage.addListener( (msg) => {
       let muted = false;
       switch (msg.type) {
         case "popup-level":
           const level = msg.level;
-          const title = truncateString(msg.title, 60);
+          const title = truncateString(msg.title, 40);
           const audible = msg.audible;
           muted = msg.muted;
           currentTabTitle.innerText = ` ${title} `;
@@ -201,6 +197,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
+
     function truncateString(str, maxLength) {
       if (str.length > maxLength) {
           return str.slice(0, maxLength) + '...';
@@ -230,8 +227,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
+
   async function updateVolume(level) {
    await chrome.runtime.sendMessage({ type: "adjust-level", level: level });
   
   }
-
