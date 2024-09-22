@@ -1,8 +1,9 @@
 
 # AudioKit: Chrome Equalizer Extension
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/a92ada43-67ae-4671-b2f5-ab7afd2da1e4" alt="Description" />
+  <img src="https://github.com/user-attachments/assets/83dafeeb-3a5c-4a3f-a744-11b62993db1d" alt="Description" width="400" />
 </p>
+
 
 _Note: This extension is compatible with Chromium-based browsers, as we utilize Manifest V3._
 
